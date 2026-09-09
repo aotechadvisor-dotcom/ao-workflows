@@ -101,6 +101,10 @@
   .empty{padding:60px 0;text-align:center;color:var(--muted);}
   .empty .mono{color:#5B6370;font-size:13px;display:block;margin-top:6px;}
 
+  .loading{padding:60px 0;text-align:center;color:var(--muted);}
+  .loading .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
   .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px 0 8px;}
   .pagination button{
     min-width:34px;height:34px;border:1px solid var(--line);background:var(--panel);
@@ -133,6 +137,7 @@
   <div class="wrap">
     <div class="brand">AO<span>Workflows</span></div>
     <nav>
+      <a href="index.html">Accueil</a>
       <a href="catalogue.html" class="on">Catalogue</a>
       <a href="refund.html">Remboursement</a>
       <a href="privacy.html">Confidentialité</a>
@@ -183,7 +188,11 @@
 
 <section class="results">
   <div class="wrap">
-    <div class="grid" id="grid"></div>
+    <div id="loading" class="loading" style="display:none;">
+      <div class="spinner"></div>
+      <p>Chargement du catalogue...</p>
+    </div>
+    <div class="grid" id="grid" style="display:none;"></div>
     <div class="empty" id="emptyState" style="display:none;">
       Aucun workflow ne correspond à ces filtres.
       <span class="mono">Essayez d'élargir votre recherche ou de réinitialiser les filtres.</span>
@@ -195,6 +204,7 @@
 <footer>
   <div class="wrap">
     <div class="legal">
+      <a href="index.html">Accueil</a>
       <a href="terms.html">Conditions générales</a>
       <a href="privacy.html">Politique de confidentialité</a>
       <a href="refund.html">Politique de remboursement</a>
@@ -205,56 +215,6 @@
 </footer>
 
 <script>
-/* ---------------------------------------------------------------
-   Sample catalog data. Replace CATALOG with a real dataset (e.g.
-   fetched from /api/products.json) — every filter/search/sort/
-   pagination routine below reads only from that array, so swapping
-   the source is a one-line change at the bottom of this file.
---------------------------------------------------------------- */
-const CATEGORIES = {
-  "AI Agents & Chatbots":     { integrations: ["OpenAI","Claude","LangChain","Pinecone","Telegram","WhatsApp"], base: 79 },
-  "Google Workspace":         { integrations: ["Google Sheets","Gmail","Google Drive","Google Calendar","Docs"], base: 79 },
-  "Scheduled & Cron Jobs":    { integrations: ["Cron","HTTP Request","Postgres","MySQL","Airtable"], base: 79 },
-  "Webhook & API":            { integrations: ["Webhook","Stripe","HubSpot","Notion","REST API"], base: 79 },
-  "Social Media Automation":  { integrations: ["Twitter/X","Discord","Slack","Buffer","Instagram"], base: 79 },
-  "Telegram Automation":      { integrations: ["Telegram","OpenAI","Google Sheets","Airtable"], base: 79 },
-};
-const TIERS = [
-  { name: "Basic",    mult: 1 },
-  { name: "Standard", mult: 1.6 },
-  { name: "Premium",  mult: 2.4 },
-  { name: "Agence",   mult: 3.5 },
-];
-const VERBS = ["Synchroniser","Automatiser","Générer","Router","Notifier","Résumer","Classer","Publier","Suivre","Extraire","Répondre à","Archiver","Enrichir","Planifier","Modérer"];
-
-function buildCatalog(){
-  const items = [];
-  let id = 1;
-  Object.entries(CATEGORIES).forEach(([cat, cfg]) => {
-    for (let i = 0; i < 30; i++){
-      const verb = VERBS[i % VERBS.length];
-      const integ1 = cfg.integrations[i % cfg.integrations.length];
-      const integ2 = cfg.integrations[(i + 2) % cfg.integrations.length];
-      const tags = integ1 === integ2 ? [integ1] : [integ1, integ2];
-      const tier = TIERS[i % TIERS.length];
-      const price = Math.round(cfg.base * tier.mult * (0.85 + (i % 5) * 0.06));
-      items.push({
-        id: id++,
-        name: `${verb} ${integ1}${tags[1] ? " → " + tags[1] : ""}`,
-        category: cat,
-        tier: tier.name,
-        integrations: tags,
-        price,
-      });
-    }
-  });
-  return items;
-}
-const CATALOG = buildCatalog();
-
-/* ---------------------------------------------------------------
-   State
---------------------------------------------------------------- */
 const state = {
   query: "",
   tier: null,
@@ -265,15 +225,35 @@ const state = {
   perPage: 12,
 };
 
-const allTiers = TIERS.map(t => t.name);
-const allCategories = Object.keys(CATEGORIES);
-const allIntegrations = [...new Set(CATALOG.flatMap(i => i.integrations))].sort();
+let CATALOG = [];
+let allTiers = [];
+let allCategories = [];
+let allIntegrations = [];
 
-/* ---------------------------------------------------------------
-   Render filter chip rows
---------------------------------------------------------------- */
+async function loadCatalog(){
+  document.getElementById('loading').style.display = 'block';
+  try {
+    const response = await fetch('catalog_data.json');
+    if (!response.ok) throw new Error('Erreur lors du chargement');
+    const data = await response.json();
+    CATALOG = data;
+    
+    allTiers = [...new Set(CATALOG.map(item => item.t))].sort();
+    allCategories = [...new Set(CATALOG.map(item => item.cat))].sort();
+    allIntegrations = [...new Set(CATALOG.flatMap(item => (item.i || '').split(',')))].filter(Boolean).sort();
+    
+    document.getElementById('loading').style.display = 'none';
+    renderChips();
+    render();
+  } catch (err) {
+    console.error('Erreur chargement:', err);
+    document.getElementById('loading').innerHTML = '<p style="color:var(--muted);">Erreur lors du chargement du catalogue. Veuillez rafraîchir.</p>';
+  }
+}
+
 function renderChipGroup(containerId, values, stateKey){
   const container = document.getElementById(containerId);
+  container.innerHTML = container.querySelector('.filter-label').outerHTML;
   values.forEach(val => {
     const chip = document.createElement("button");
     chip.className = "chip";
@@ -286,9 +266,12 @@ function renderChipGroup(containerId, values, stateKey){
     container.appendChild(chip);
   });
 }
-renderChipGroup("tierFilters", allTiers, "tier");
-renderChipGroup("catFilters", allCategories, "category");
-renderChipGroup("integFilters", allIntegrations, "integration");
+
+function renderChips(){
+  renderChipGroup("tierFilters", allTiers, "tier");
+  renderChipGroup("catFilters", allCategories, "category");
+  renderChipGroup("integFilters", allIntegrations, "integration");
+}
 
 function syncChipStates(){
   document.querySelectorAll("#tierFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.tier));
@@ -296,25 +279,22 @@ function syncChipStates(){
   document.querySelectorAll("#integFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.integration));
 }
 
-/* ---------------------------------------------------------------
-   Filtering / sorting / pagination
---------------------------------------------------------------- */
 function getFiltered(){
   const q = state.query.trim().toLowerCase();
   let items = CATALOG.filter(item => {
-    if (state.tier && item.tier !== state.tier) return false;
-    if (state.category && item.category !== state.category) return false;
-    if (state.integration && !item.integrations.includes(state.integration)) return false;
+    if (state.tier && item.t !== state.tier) return false;
+    if (state.category && item.cat !== state.category) return false;
+    if (state.integration && !(item.i || '').split(',').includes(state.integration)) return false;
     if (q){
-      const hay = (item.name + " " + item.category + " " + item.integrations.join(" ")).toLowerCase();
+      const hay = (item.n + " " + item.cat + " " + (item.i || '')).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
   });
   switch (state.sort){
-    case "price-asc":  items = items.sort((a,b) => a.price - b.price); break;
-    case "price-desc": items = items.sort((a,b) => b.price - a.price); break;
-    case "name-asc":   items = items.sort((a,b) => a.name.localeCompare(b.name)); break;
+    case "price-asc":  items = items.sort((a,b) => a.p - b.p); break;
+    case "price-desc": items = items.sort((a,b) => b.p - a.p); break;
+    case "name-asc":   items = items.sort((a,b) => a.n.localeCompare(b.n)); break;
   }
   return items;
 }
@@ -330,18 +310,20 @@ function render(){
   const grid = document.getElementById("grid");
   const empty = document.getElementById("emptyState");
   grid.innerHTML = "";
-  empty.style.display = filtered.length ? "none" : "block";
+  grid.style.display = filtered.length ? 'grid' : 'none';
+  empty.style.display = filtered.length ? 'none' : 'block';
 
   pageItems.forEach(item => {
     const card = document.createElement("div");
     card.className = "card";
+    const tags = (item.i || '').split(',').filter(Boolean);
     card.innerHTML = `
-      <div class="tier">${item.tier}</div>
-      <h3>${item.name}</h3>
-      <div class="cat">${item.category}</div>
-      <div class="tags">${item.integrations.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+      <div class="tier">${item.t || 'Basic'}</div>
+      <h3>${item.n}</h3>
+      <div class="cat">${item.cat}</div>
+      <div class="tags">${tags.map(t => `<span class="tag">${t.trim()}</span>`).join("")}</div>
       <div class="foot">
-        <div class="price">${item.price} $</div>
+        <div class="price">${item.p} $</div>
         <div class="view">Voir le workflow →</div>
       </div>
     `;
@@ -384,9 +366,6 @@ function renderPagination(totalPages){
   addBtn("›", Math.min(totalPages, state.page + 1), { disabled: state.page === totalPages });
 }
 
-/* ---------------------------------------------------------------
-   Events
---------------------------------------------------------------- */
 document.getElementById("search").addEventListener("input", e => {
   state.query = e.target.value;
   state.page = 1;
@@ -404,7 +383,7 @@ document.getElementById("clearBtn").addEventListener("click", () => {
   render();
 });
 
-render();
+loadCatalog();
 </script>
 
 </body>
