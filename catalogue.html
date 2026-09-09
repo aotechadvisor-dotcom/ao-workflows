@@ -86,7 +86,7 @@
     font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);
     letter-spacing:.3px;
   }
-  .card h3{font-size:15px;font-weight:600;}
+  .card h3{font-size:15px;font-weight:600;word-break:break-word;}
   .card .cat{color:#5B6370;font-size:12.5px;}
   .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
   .card .tag{
@@ -158,7 +158,7 @@
     <div class="search-row">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="search" type="text" placeholder="Rechercher un workflow (ex: Slack, agent IA, Sheets…)">
+        <input id="search" type="text" placeholder="Rechercher un workflow (ex: webhook, agent IA…)">
       </div>
       <select id="sort">
         <option value="relevance">Pertinence</option>
@@ -171,12 +171,6 @@
       <div class="filter-group" id="tierFilters">
         <span class="filter-label">Licence</span>
       </div>
-      <div class="filter-group" id="catFilters">
-        <span class="filter-label">Catégorie</span>
-      </div>
-      <div class="filter-group" id="integFilters">
-        <span class="filter-label">Intégration</span>
-      </div>
       <button class="clear-btn" id="clearBtn">Réinitialiser les filtres</button>
     </div>
     <div class="meta-row">
@@ -188,7 +182,7 @@
 
 <section class="results">
   <div class="wrap">
-    <div id="loading" class="loading" style="display:none;">
+    <div id="loading" class="loading">
       <div class="spinner"></div>
       <p>Chargement du catalogue...</p>
     </div>
@@ -218,8 +212,6 @@
 const state = {
   query: "",
   tier: null,
-  category: null,
-  integration: null,
   sort: "relevance",
   page: 1,
   perPage: 12,
@@ -227,33 +219,29 @@ const state = {
 
 let CATALOG = [];
 let allTiers = [];
-let allCategories = [];
-let allIntegrations = [];
 
 async function loadCatalog(){
-  document.getElementById('loading').style.display = 'block';
   try {
     const response = await fetch('catalog_data.json');
     if (!response.ok) throw new Error('Erreur lors du chargement');
     const data = await response.json();
     CATALOG = data;
     
-    allTiers = [...new Set(CATALOG.map(item => item.t))].sort();
-    allCategories = [...new Set(CATALOG.map(item => item.cat))].sort();
-    allIntegrations = [...new Set(CATALOG.flatMap(item => (item.i || '').split(',')))].filter(Boolean).sort();
+    allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))].sort();
     
     document.getElementById('loading').style.display = 'none';
     renderChips();
     render();
   } catch (err) {
     console.error('Erreur chargement:', err);
-    document.getElementById('loading').innerHTML = '<p style="color:var(--muted);">Erreur lors du chargement du catalogue. Veuillez rafraîchir.</p>';
+    document.getElementById('loading').innerHTML = '<p style="color:#ff6b6b;">⚠️ Erreur: Impossible de charger le catalogue. Vérifiez que catalog_data.json existe.</p>';
   }
 }
 
 function renderChipGroup(containerId, values, stateKey){
   const container = document.getElementById(containerId);
-  container.innerHTML = container.querySelector('.filter-label').outerHTML;
+  const label = container.querySelector('.filter-label');
+  container.innerHTML = label.outerHTML;
   values.forEach(val => {
     const chip = document.createElement("button");
     chip.className = "chip";
@@ -269,32 +257,26 @@ function renderChipGroup(containerId, values, stateKey){
 
 function renderChips(){
   renderChipGroup("tierFilters", allTiers, "tier");
-  renderChipGroup("catFilters", allCategories, "category");
-  renderChipGroup("integFilters", allIntegrations, "integration");
 }
 
 function syncChipStates(){
   document.querySelectorAll("#tierFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.tier));
-  document.querySelectorAll("#catFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.category));
-  document.querySelectorAll("#integFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.integration));
 }
 
 function getFiltered(){
   const q = state.query.trim().toLowerCase();
   let items = CATALOG.filter(item => {
     if (state.tier && item.t !== state.tier) return false;
-    if (state.category && item.cat !== state.category) return false;
-    if (state.integration && !(item.i || '').split(',').includes(state.integration)) return false;
     if (q){
-      const hay = (item.n + " " + item.cat + " " + (item.i || '')).toLowerCase();
+      const hay = (item.n || '').toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
   });
   switch (state.sort){
-    case "price-asc":  items = items.sort((a,b) => a.p - b.p); break;
-    case "price-desc": items = items.sort((a,b) => b.p - a.p); break;
-    case "name-asc":   items = items.sort((a,b) => a.n.localeCompare(b.n)); break;
+    case "price-asc":  items = items.sort((a,b) => (a.p || 0) - (b.p || 0)); break;
+    case "price-desc": items = items.sort((a,b) => (b.p || 0) - (a.p || 0)); break;
+    case "name-asc":   items = items.sort((a,b) => (a.n || '').localeCompare(b.n || '')); break;
   }
   return items;
 }
@@ -316,15 +298,12 @@ function render(){
   pageItems.forEach(item => {
     const card = document.createElement("div");
     card.className = "card";
-    const tags = (item.i || '').split(',').filter(Boolean);
     card.innerHTML = `
       <div class="tier">${item.t || 'Basic'}</div>
-      <h3>${item.n}</h3>
-      <div class="cat">${item.cat}</div>
-      <div class="tags">${tags.map(t => `<span class="tag">${t.trim()}</span>`).join("")}</div>
+      <h3>${item.n || 'Sans titre'}</h3>
       <div class="foot">
-        <div class="price">${item.p} $</div>
-        <div class="view">Voir le workflow →</div>
+        <div class="price">${item.p || '0'} $</div>
+        <div class="view">Voir →</div>
       </div>
     `;
     grid.appendChild(card);
@@ -376,7 +355,7 @@ document.getElementById("sort").addEventListener("change", e => {
   render();
 });
 document.getElementById("clearBtn").addEventListener("click", () => {
-  state.query = ""; state.tier = null; state.category = null; state.integration = null;
+  state.query = ""; state.tier = null;
   state.sort = "relevance"; state.page = 1;
   document.getElementById("search").value = "";
   document.getElementById("sort").value = "relevance";
