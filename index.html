@@ -6,122 +6,118 @@
 <title>AO Workflows — Automatisations n8n prêtes à l'emploi</title>
 <style>
   :root{
-    --bg:#14171C;
-    --panel:#1B1F26;
-    --panel-2:#20242C;
-    --line:#2A2F38;
-    --text:#E7E9EC;
-    --muted:#9199A6;
-    --accent:#F2A93B;
-    --accent-dim:#3A3226;
+    --bg:#0D0F13; --panel:#171A21; --panel-2:#1D212A; --line:#262B35;
+    --text:#ECEEF1; --muted:#8890A0; --dim:#565D6B;
+    --accent:#F2A93B; --accent-dim:#3A2E18;
+    --pulse:#37E6C4; --pulse-dim:#123330;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
-    background:var(--bg);
-    color:var(--text);
+    background:var(--bg);color:var(--text);
     font-family:'IBM Plex Sans',-apple-system,Segoe UI,Roboto,sans-serif;
     line-height:1.6;
+    background-image:
+      linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+    background-size:48px 48px;
   }
-  @font-face{font-family:'IBM Plex Sans';src:local('Segoe UI');}
   h1,h2,h3,.mono{font-family:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;}
   a{color:inherit;text-decoration:none;}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
 
-  header{
-    border-bottom:1px solid var(--line);
-    padding:22px 0;
-  }
+  header{border-bottom:1px solid var(--line);padding:22px 0;position:relative;z-index:5;}
   header .wrap{display:flex;align-items:center;justify-content:space-between;}
-  .brand{font-family:'IBM Plex Mono',monospace;font-size:18px;letter-spacing:0.3px;}
+  .brand{font-family:'IBM Plex Mono',monospace;font-size:18px;letter-spacing:.3px;display:flex;align-items:center;gap:8px;}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--pulse);box-shadow:0 0 8px var(--pulse);animation:blink 2s ease-in-out infinite;}
   .brand span{color:var(--accent);}
-  nav a{color:var(--muted);margin-left:28px;font-size:14px;transition:color .15s;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+  nav a{color:var(--muted);margin-left:30px;font-size:14px;transition:color .15s;}
   nav a:hover{color:var(--text);}
 
-  .hero{
-    padding:88px 0 64px;
-    display:grid;
-    grid-template-columns:1.1fr 0.9fr;
-    gap:40px;
-    align-items:center;
-  }
+  /* ---------- HERO ---------- */
+  .hero{padding:90px 0 70px;position:relative;overflow:hidden;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--pulse);letter-spacing:.04em;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+  .kicker::before{content:"";width:16px;height:1px;background:var(--pulse);}
   .hero h1{
-    font-size:44px;
-    line-height:1.18;
-    font-weight:500;
-    max-width:520px;
+    font-size:clamp(34px,4.4vw,54px);line-height:1.12;font-weight:500;letter-spacing:-.01em;max-width:600px;
   }
-  .hero p.lead{
-    margin-top:20px;
-    color:var(--muted);
-    font-size:17px;
-    max-width:460px;
-  }
-  .cta-row{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap;}
-  .btn{
-    display:inline-block;
-    padding:13px 22px;
-    border-radius:6px;
-    font-size:15px;
-    font-weight:500;
-  }
+  .hero h1 .hl{color:var(--accent);}
+  .hero p.lead{margin-top:22px;color:var(--muted);font-size:17px;max-width:460px;line-height:1.65;}
+  .cta-row{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:6px;font-size:14.5px;font-weight:600;}
   .btn-primary{background:var(--accent);color:#171207;}
-  .btn-ghost{border:1px solid var(--line);color:var(--text);}
   .btn-primary:hover{filter:brightness(1.08);}
-  .btn-ghost:hover{border-color:var(--muted);}
+  .btn-ghost{border:1px solid var(--line);color:var(--text);}
+  .btn-ghost:hover{border-color:var(--dim);}
 
-  .graph{width:100%;height:auto;}
-  .graph circle{fill:var(--panel-2);stroke:var(--line);stroke-width:1.5;}
-  .graph circle.active{fill:var(--accent-dim);stroke:var(--accent);}
-  .graph line{stroke:var(--line);stroke-width:1.5;}
-  .graph line.on{stroke:var(--accent);}
-  .graph text{fill:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px;}
+  .diagram-wrap{position:relative;}
+  .diagram-wrap svg{width:100%;height:auto;display:block;}
+  .flow-line{stroke:var(--line);stroke-width:1.5;fill:none;}
+  .flow-pulse{stroke:var(--pulse);stroke-width:2;fill:none;stroke-dasharray:6 340;stroke-dashoffset:0;animation:flow 3.2s linear infinite;filter:drop-shadow(0 0 4px var(--pulse));}
+  .flow-pulse.delay1{animation-delay:.7s;}
+  .flow-pulse.delay2{animation-delay:1.5s;}
+  .flow-pulse.delay3{animation-delay:2.2s;}
+  @keyframes flow{to{stroke-dashoffset:-346;}}
+  .node-box{fill:var(--panel);stroke:var(--line);stroke-width:1.5;}
+  .node-box.active{stroke:var(--accent);}
+  .node-label{font-family:'IBM Plex Mono',monospace;font-size:10px;fill:var(--muted);}
+  .node-label.on{fill:var(--accent);}
 
-  .stats{
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-    padding:36px 0;
+  /* ---------- STATS STRIP ---------- */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);}
+  .stat{padding:26px 24px;border-left:1px solid var(--line);}
+  .stat:first-child{border-left:none;}
+  .stat .n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--pulse);margin-bottom:6px;}
+  .stat .v{font-size:26px;font-weight:600;}
+  .stat .l{color:var(--muted);font-size:12.5px;margin-top:2px;}
+
+  /* ---------- CATALOG SECTION ---------- */
+  section.catalog{padding:80px 0;}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px;gap:24px;flex-wrap:wrap;}
+  .sec-head h2{font-size:26px;font-weight:500;}
+  .sec-head p{color:var(--muted);font-size:14.5px;max-width:440px;margin-top:8px;}
+  .sec-head .see-all{font-size:13.5px;color:var(--accent);white-space:nowrap;padding-bottom:4px;border-bottom:1px solid var(--accent-dim);}
+  .sec-head .see-all:hover{border-color:var(--accent);}
+
+  .grid-bundles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:22px;position:relative;transition:border-color .15s;}
+  .card:hover{border-color:var(--dim);}
+  .card::before{content:"";position:absolute;top:22px;left:-1px;width:3px;height:22px;background:var(--accent);border-radius:0 2px 2px 0;}
+  .card .count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--pulse);margin-bottom:10px;}
+  .card h3{font-size:15.5px;font-weight:600;margin-bottom:8px;}
+  .card p{color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.55;}
+  .card .foot{display:flex;justify-content:space-between;align-items:center;}
+  .card .price{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:16px;}
+  .card .buy{font-size:12.5px;color:var(--text);border:1px solid var(--line);padding:7px 14px;border-radius:5px;}
+  .card .buy:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ---------- HOW IT WORKS ---------- */
+  section.how{padding:80px 0;border-top:1px solid var(--line);}
+  .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;}
+  .how-step{padding:0 28px 0 0;position:relative;}
+  .how-step:not(:last-child)::after{
+    content:"";position:absolute;top:18px;right:-2px;width:calc(100% - 56px);height:1px;
+    background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
   }
-  .stats .wrap{display:flex;gap:0;flex-wrap:wrap;}
-  .stat{flex:1;min-width:140px;padding:0 24px;border-left:1px solid var(--line);}
-  .stat:first-child{border-left:none;padding-left:0;}
-  .stat .num{font-family:'IBM Plex Mono',monospace;font-size:30px;color:var(--accent);}
-  .stat .label{color:var(--muted);font-size:13px;margin-top:6px;}
+  .how-step .num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--pulse);border:1px solid var(--pulse-dim);background:var(--pulse-dim);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .how-step h3{font-size:16px;font-weight:600;margin-bottom:8px;}
+  .how-step p{color:var(--muted);font-size:13.5px;line-height:1.6;}
 
-  section.catalog{padding:72px 0;}
-  section.catalog h2{font-size:26px;font-weight:500;margin-bottom:10px;}
-  section.catalog p.sub{color:var(--muted);max-width:520px;margin-bottom:36px;}
-
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-  .card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:6px;
-    padding:22px;
-    position:relative;
-  }
-  .card::before{
-    content:"";
-    position:absolute;top:22px;left:-1px;
-    width:3px;height:22px;
-    background:var(--accent);
-    border-radius:0 2px 2px 0;
-  }
-  .card h3{font-size:15px;font-weight:600;margin-bottom:8px;}
-  .card p{color:var(--muted);font-size:13.5px;margin-bottom:14px;}
-  .card .price{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:15px;}
-
-  footer{border-top:1px solid var(--line);padding:36px 0;margin-top:40px;}
+  footer{border-top:1px solid var(--line);padding:36px 0;}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;}
   footer .legal a{color:var(--muted);font-size:13px;margin-right:22px;}
   footer .legal a:hover{color:var(--text);}
-  footer .copy{color:#5B6370;font-size:12.5px;}
+  footer .copy{color:var(--dim);font-size:12.5px;}
 
-  @media (max-width:760px){
-    .hero{grid-template-columns:1fr;}
-    .grid{grid-template-columns:1fr;}
-    .stats .wrap{flex-direction:column;}
-    .stat{border-left:none;border-top:1px solid var(--line);padding:16px 0;}
-    .stat:first-child{border-top:none;}
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .stats .wrap{grid-template-columns:repeat(2,1fr);}
+    .stat:nth-child(3){border-left:none;}
+    .grid-bundles{grid-template-columns:1fr;}
+    .how-grid{grid-template-columns:1fr;gap:32px;}
+    .how-step:not(:last-child)::after{display:none;}
   }
 </style>
 </head>
@@ -129,9 +125,9 @@
 
 <header>
   <div class="wrap">
-    <div class="brand">AO<span>Workflows</span></div>
+    <div class="brand"><span class="dot"></span>AO<span>Workflows</span></div>
     <nav>
-      <a href="index.html#catalogue">Catalogue</a>
+      <a href="catalogue.html">Catalogue</a>
       <a href="refund.html">Remboursement</a>
       <a href="privacy.html">Confidentialité</a>
       <a href="terms.html">Conditions</a>
@@ -140,36 +136,43 @@
 </header>
 
 <section class="hero">
-  <div class="wrap" style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;">
+  <div class="wrap hero-grid">
     <div>
-      <h1>Des automatisations n8n prêtes à l'emploi, pas des tutoriels.</h1>
-      <p class="lead">Un catalogue de workflows n8n testés et fonctionnels — agents IA, intégrations CRM, planification, webhooks. Importez un fichier .json, connectez vos clés API, c'est en ligne.</p>
+      <div class="kicker">1958 workflows en production</div>
+      <h1>Des automatisations n8n <span class="hl">déjà connectées</span>, pas des tutoriels à suivre.</h1>
+      <p class="lead">Importe un fichier .json, branche tes clés API, c'est en ligne. Agents IA, CRM, planification, webhooks — testés, documentés, prêts à tourner.</p>
       <div class="cta-row">
-        <a href="#catalogue" class="btn btn-primary">Voir le catalogue</a>
-        <a href="terms.html" class="btn btn-ghost">Conditions de licence</a>
+        <a href="catalogue.html" class="btn btn-primary">Parcourir le catalogue</a>
+        <a href="#bundles" class="btn btn-ghost">Voir les bundles</a>
       </div>
     </div>
-    <div>
-      <svg class="graph" viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
-        <line x1="60" y1="60" x2="160" y2="40" />
-        <line x1="160" y1="40" x2="260" y2="70" class="on" />
-        <line x1="60" y1="60" x2="70" y2="150" />
-        <line x1="70" y1="150" x2="160" y2="180" class="on" />
-        <line x1="160" y1="180" x2="260" y2="150" />
-        <line x1="160" y1="40" x2="70" y2="150" />
-        <line x1="260" y1="70" x2="260" y2="150" class="on" />
-        <circle cx="60" cy="60" r="16"/>
-        <circle cx="160" cy="40" r="16" class="active"/>
-        <circle cx="260" cy="70" r="16"/>
-        <circle cx="70" cy="150" r="16" class="active"/>
-        <circle cx="160" cy="180" r="16"/>
-        <circle cx="260" cy="150" r="16" class="active"/>
-        <text x="34" y="90">trigger</text>
-        <text x="134" y="24">agent ia</text>
-        <text x="236" y="100">sheets</text>
-        <text x="44" y="180">webhook</text>
-        <text x="134" y="210">filtre</text>
-        <text x="228" y="180">notify</text>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg">
+        <path class="flow-line" d="M70,80 L200,80 L200,180"/>
+        <path class="flow-pulse" d="M70,80 L200,80 L200,180"/>
+        <path class="flow-line" d="M70,180 L140,180 L200,180"/>
+        <path class="flow-pulse delay1" d="M70,180 L140,180 L200,180"/>
+        <path class="flow-line" d="M70,280 L200,280 L200,180"/>
+        <path class="flow-pulse delay2" d="M70,280 L200,280 L200,180"/>
+        <path class="flow-line" d="M240,180 L340,180 L340,90 L410,90"/>
+        <path class="flow-pulse delay1" d="M240,180 L340,180 L340,90 L410,90"/>
+        <path class="flow-line" d="M240,180 L340,180 L340,270 L410,270"/>
+        <path class="flow-pulse delay3" d="M240,180 L340,180 L340,270 L410,270"/>
+
+        <rect class="node-box" x="10" y="60" width="60" height="40" rx="5"/>
+        <text class="node-label" x="20" y="84">webhook</text>
+        <rect class="node-box" x="10" y="160" width="60" height="40" rx="5"/>
+        <text class="node-label" x="24" y="184">cron</text>
+        <rect class="node-box" x="10" y="260" width="60" height="40" rx="5"/>
+        <text class="node-label" x="16" y="284">telegram</text>
+
+        <rect class="node-box active" x="200" y="160" width="80" height="44" rx="5"/>
+        <text class="node-label on" x="216" y="186">agent IA</text>
+
+        <rect class="node-box" x="410" y="70" width="60" height="40" rx="5"/>
+        <text class="node-label" x="424" y="94">sheets</text>
+        <rect class="node-box" x="410" y="250" width="60" height="40" rx="5"/>
+        <text class="node-label" x="420" y="274">notify</text>
       </svg>
     </div>
   </div>
@@ -177,47 +180,81 @@
 
 <section class="stats">
   <div class="wrap">
-    <div class="stat"><div class="num">1958</div><div class="label">workflows vendables</div></div>
-    <div class="stat"><div class="num">664</div><div class="label">avec agents IA / LangChain</div></div>
-    <div class="stat"><div class="num">7</div><div class="label">bundles thématiques</div></div>
-    <div class="stat"><div class="num">3</div><div class="label">tiers de licence</div></div>
+    <div class="stat"><div class="n">total</div><div class="v">1958</div><div class="l">workflows vendables</div></div>
+    <div class="stat"><div class="n">avec IA</div><div class="v">664</div><div class="l">agents & chaînes LLM</div></div>
+    <div class="stat"><div class="n">packs</div><div class="v">7</div><div class="l">bundles thématiques</div></div>
+    <div class="stat"><div class="n">licences</div><div class="v">3</div><div class="l">tiers : Basic / Standard / Premium</div></div>
   </div>
 </section>
 
-<section class="catalog" id="catalogue">
+<section class="catalog" id="bundles">
   <div class="wrap">
-    <h2>Bundles disponibles</h2>
-    <p class="sub">Chaque bundle regroupe des workflows testés autour d'un même usage. Fichiers .json, import direct dans n8n self-hosted ou n8n Cloud.</p>
-    <div class="grid">
+    <div class="sec-head">
+      <div>
+        <h2>Bundles thématiques</h2>
+        <p>Regroupés par cas d'usage — un seul achat, tous les workflows du domaine.</p>
+      </div>
+      <a href="catalogue.html" class="see-all">Voir les 1958 workflows à l'unité →</a>
+    </div>
+    <div class="grid-bundles">
       <div class="card">
-        <h3>AI Agents &amp; Chatbots</h3>
-        <p>725 workflows — agents autonomes, chaînes LLM, mémoire conversationnelle.</p>
-        <div class="price">à partir de 79 $</div>
+        <div class="count">725 workflows</div>
+        <h3>AI Agents & Chatbots</h3>
+        <p>Agents autonomes, chaînes LLM, mémoire conversationnelle, RAG.</p>
+        <div class="foot"><span class="price">149 $</span><a class="buy" href="#">Acheter</a></div>
       </div>
       <div class="card">
+        <div class="count">429 workflows</div>
         <h3>Google Workspace</h3>
-        <p>429 workflows — Sheets, Drive, Calendar, Gmail interconnectés.</p>
-        <div class="price">à partir de 79 $</div>
+        <p>Sheets, Drive, Calendar, Gmail interconnectés.</p>
+        <div class="foot"><span class="price">99 $</span><a class="buy" href="#">Acheter</a></div>
       </div>
       <div class="card">
-        <h3>Scheduled &amp; Cron Jobs</h3>
-        <p>295 workflows — tâches planifiées et automatisations récurrentes.</p>
-        <div class="price">à partir de 79 $</div>
+        <div class="count">295 workflows</div>
+        <h3>Scheduled & Cron Jobs</h3>
+        <p>Tâches planifiées et automatisations récurrentes.</p>
+        <div class="foot"><span class="price">79 $</span><a class="buy" href="#">Acheter</a></div>
       </div>
       <div class="card">
-        <h3>Webhook &amp; API</h3>
-        <p>189 workflows — intégrations événementielles et API tierces.</p>
-        <div class="price">à partir de 79 $</div>
+        <div class="count">189 workflows</div>
+        <h3>Webhook & API</h3>
+        <p>Intégrations événementielles et API tierces.</p>
+        <div class="foot"><span class="price">79 $</span><a class="buy" href="#">Acheter</a></div>
       </div>
       <div class="card">
+        <div class="count">135 workflows</div>
         <h3>Social Media Automation</h3>
-        <p>135 workflows — Twitter/X, Discord, Slack.</p>
-        <div class="price">à partir de 79 $</div>
+        <p>Twitter/X, Discord, Slack.</p>
+        <div class="foot"><span class="price">79 $</span><a class="buy" href="#">Acheter</a></div>
       </div>
       <div class="card">
+        <div class="count">90 workflows</div>
         <h3>Telegram Automation</h3>
-        <p>90 workflows — bots, alertes et interfaces Telegram.</p>
-        <div class="price">à partir de 79 $</div>
+        <p>Bots, alertes et interfaces Telegram.</p>
+        <div class="foot"><span class="price">59 $</span><a class="buy" href="#">Acheter</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="wrap">
+    <div class="sec-head"><div><h2>Comment ça marche</h2></div></div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="num">1</div>
+        <h3>Choisis un workflow ou un bundle</h3>
+        <p>Filtre par intégration, budget ou niveau de licence dans le catalogue.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">2</div>
+        <h3>Reçois le fichier instantanément</h3>
+        <p>Paiement sécurisé, lien de téléchargement envoyé automatiquement par email.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">3</div>
+        <h3>Importe et connecte tes clés</h3>
+        <p>Glisse le .json dans n8n, ajoute tes identifiants API, c'est actif.</p>
       </div>
     </div>
   </div>
