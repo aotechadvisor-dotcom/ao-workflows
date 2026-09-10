@@ -289,7 +289,16 @@ function getFiltered(){
   }
   return items;
 }
-
+function cleanName(raw){
+  if (!raw) return 'Sans titre';
+  let name = String(raw);
+  name = name.replace(/\.json$/i, '');
+  name = name.replace(/^\s*[\[\(]?\d+[\]\)]?[\s_\-\.:]+/, '');
+  name = name.replace(/_/g, ' ');
+  name = name.replace(/\s{2,}/g, ' ').trim();
+  if (name) name = name.charAt(0).toUpperCase() + name.slice(1);
+  return name || 'Sans titre';
+}
 function render(){
   syncChipStates();
   const filtered = getFiltered();
@@ -309,7 +318,7 @@ function render(){
     card.className = "card";
     card.innerHTML = `
       <div class="tier">${item.t || 'Basic'}</div>
-      <h3>${item.n || 'Sans titre'}</h3>
+     <h3>${cleanName(item.n)}</h3>
       <div class="foot">
         <div class="price">${item.p || '0'} $</div>
         <div class="view">Voir →</div>
