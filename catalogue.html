@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
-<!-- ==================== catalogue.html ==================== -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catalogue — 1958 workflows n8n | AO Workflows</title>
 <meta name="description" content="Parcourez 1958 workflows n8n : filtrez par licence, catégorie ou intégration (OpenAI, Slack, Google Sheets, Telegram...). Fichiers .json prêts à importer.">
-<link rel="canonical" href="https://aoworkflows.com/catalogue.html">
+<link rel="canonical" href="https://aotechadvisor-dotcom.github.io/ao-workflows/catalogue.html">
 <meta property="og:title" content="Catalogue — 1958 workflows n8n | AO Workflows">
 <meta property="og:description" content="Filtrez par licence, catégorie ou intégration et trouvez le workflow n8n qu'il vous faut.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://aoworkflows.com/catalogue.html">
-
->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catalogue — AO Workflows</title>
+<meta property="og:url" content="https://aotechadvisor-dotcom.github.io/ao-workflows/catalogue.html">
 <style>
   :root{
     --bg:#14171C;
@@ -229,15 +226,29 @@ const state = {
 let CATALOG = [];
 let allTiers = [];
 
+/* Nettoie les noms de workflow : enlève les numéros de tri du début
+   (0373, [2451], 0862_ ...), remplace les underscores par des espaces
+   et met une majuscule au début. Ne modifie jamais catalog_data.json. */
+function cleanName(raw){
+  if (!raw) return 'Sans titre';
+  let name = String(raw);
+  name = name.replace(/\.json$/i, '');
+  name = name.replace(/^\s*[\[\(]?\d+[\]\)]?[\s_\-\.:]+/, '');
+  name = name.replace(/_/g, ' ');
+  name = name.replace(/\s{2,}/g, ' ').trim();
+  if (name) name = name.charAt(0).toUpperCase() + name.slice(1);
+  return name || 'Sans titre';
+}
+
 async function loadCatalog(){
   try {
     const response = await fetch('catalog_data.json');
     if (!response.ok) throw new Error('Erreur lors du chargement');
     const data = await response.json();
     CATALOG = data;
-    
+
     allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))].sort();
-    
+
     document.getElementById('loading').style.display = 'none';
     renderChips();
     render();
@@ -285,20 +296,11 @@ function getFiltered(){
   switch (state.sort){
     case "price-asc":  items = items.sort((a,b) => (a.p || 0) - (b.p || 0)); break;
     case "price-desc": items = items.sort((a,b) => (b.p || 0) - (a.p || 0)); break;
-    case "name-asc":   items = items.sort((a,b) => (a.n || '').localeCompare(b.n || '')); break;
+    case "name-asc":   items = items.sort((a,b) => cleanName(a.n).localeCompare(cleanName(b.n))); break;
   }
   return items;
 }
-function cleanName(raw){
-  if (!raw) return 'Sans titre';
-  let name = String(raw);
-  name = name.replace(/\.json$/i, '');
-  name = name.replace(/^\s*[\[\(]?\d+[\]\)]?[\s_\-\.:]+/, '');
-  name = name.replace(/_/g, ' ');
-  name = name.replace(/\s{2,}/g, ' ').trim();
-  if (name) name = name.charAt(0).toUpperCase() + name.slice(1);
-  return name || 'Sans titre';
-}
+
 function render(){
   syncChipStates();
   const filtered = getFiltered();
@@ -318,7 +320,7 @@ function render(){
     card.className = "card";
     card.innerHTML = `
       <div class="tier">${item.t || 'Basic'}</div>
-     <h3>${cleanName(item.n)}</h3>
+      <h3>${cleanName(item.n)}</h3>
       <div class="foot">
         <div class="price">${item.p || '0'} $</div>
         <div class="view">Voir →</div>
