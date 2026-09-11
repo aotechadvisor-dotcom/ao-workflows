@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogue — 1958 workflows n8n | AO Workflows</title>
+<meta name="description" content="Parcourez 1958 workflows n8n : filtrez par licence, catégorie ou intégration (OpenAI, Slack, Google Sheets, Telegram...). Fichiers .json prêts à importer.">
+<link rel="canonical" href="https://aotechadvisor-dotcom.github.io/ao-workflows/catalogue.html">
+<meta property="og:title" content="Catalogue — 1958 workflows n8n | AO Workflows">
+<meta property="og:description" content="Filtrez par licence, catégorie ou intégration et trouvez le workflow n8n qu'il vous faut.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aotechadvisor-dotcom.github.io/ao-workflows/catalogue.html">
+<style>
+  :root{
+    --bg:#14171C;
+    --panel:#1B1F26;
+    --panel-2:#20242C;
+    --line:#2A2F38;
+    --text:#E7E9EC;
+    --muted:#9199A6;
+    --accent:#F2A93B;
+    --accent-dim:#3A3226;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans',-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3,.mono{font-family:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;}
+  a{color:inherit;text-decoration:none;}
+  button{font:inherit;color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  header{border-bottom:1px solid var(--line);padding:22px 0;}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;}
+  .brand{font-family:'IBM Plex Mono',monospace;font-size:18px;letter-spacing:0.3px;}
+  .brand span{color:var(--accent);}
+  nav a{color:var(--muted);margin-left:28px;font-size:14px;transition:color .15s;}
+  nav a:hover, nav a.on{color:var(--text);}
+
+  .page-head{padding:56px 0 32px;border-bottom:1px solid var(--line);}
+  .page-head h1{font-size:32px;font-weight:500;margin-bottom:8px;}
+  .page-head p{color:var(--muted);font-size:15px;max-width:520px;}
+
+  .toolbar{padding:28px 0 0;position:sticky;top:0;background:var(--bg);z-index:5;}
+  .search-row{display:flex;gap:12px;margin-bottom:16px;}
+  .search-box{
+    flex:1;background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:11px 14px;display:flex;align-items:center;gap:10px;
+  }
+  .search-box svg{flex:none;opacity:.55;}
+  .search-box input{
+    flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14.5px;
+  }
+  .search-box input::placeholder{color:#5B6370;}
+  select#sort{
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:0 14px;color:var(--text);font-size:14px;
+  }
+
+  .filters{display:flex;flex-wrap:wrap;gap:10px 28px;padding:14px 0 22px;border-bottom:1px solid var(--line);}
+  .filter-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .filter-label{color:#5B6370;font-size:12px;font-family:'IBM Plex Mono',monospace;margin-right:2px;}
+  .chip{
+    border:1px solid var(--line);background:var(--panel);color:var(--muted);
+    font-size:13px;padding:6px 12px;border-radius:20px;cursor:pointer;
+    transition:all .12s;
+  }
+  .chip:hover{border-color:var(--muted);color:var(--text);}
+  .chip.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+  .clear-btn{
+    color:var(--muted);font-size:13px;border:none;background:none;cursor:pointer;
+    text-decoration:underline;text-underline-offset:2px;
+  }
+  .clear-btn:hover{color:var(--text);}
+
+  .meta-row{display:flex;justify-content:space-between;align-items:baseline;padding:18px 0 4px;color:var(--muted);font-size:13.5px;}
+
+  section.results{padding:20px 0 40px;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:20px;position:relative;display:flex;flex-direction:column;gap:10px;
+  }
+  .card::before{
+    content:"";position:absolute;top:20px;left:-1px;width:3px;height:20px;
+    background:var(--accent);border-radius:0 2px 2px 0;
+  }
+  .card .tier{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);
+    letter-spacing:.3px;
+  }
+  .card h3{font-size:15px;font-weight:600;word-break:break-word;}
+  .card .cat{color:#5B6370;font-size:12.5px;}
+  .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+  .card .tag{
+    font-size:11.5px;color:var(--muted);border:1px solid var(--line);
+    border-radius:4px;padding:2px 7px;
+  }
+  .card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px;}
+  .card .price{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:15px;}
+  .card .view{color:var(--muted);font-size:13px;}
+  .card:hover .view{color:var(--text);}
+
+  .empty{padding:60px 0;text-align:center;color:var(--muted);}
+  .empty .mono{color:#5B6370;font-size:13px;display:block;margin-top:6px;}
+
+  .loading{padding:60px 0;text-align:center;color:var(--muted);}
+  .loading .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px 0 8px;}
+  .pagination button{
+    min-width:34px;height:34px;border:1px solid var(--line);background:var(--panel);
+    color:var(--muted);border-radius:6px;cursor:pointer;font-size:13.5px;
+  }
+  .pagination button:hover:not(:disabled){border-color:var(--muted);color:var(--text);}
+  .pagination button.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+  .pagination button:disabled{opacity:.35;cursor:default;}
+  .pagination .gap{color:#5B6370;padding:0 4px;}
+
+  footer{border-top:1px solid var(--line);padding:36px 0;margin-top:40px;}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+  footer .legal a{color:var(--muted);font-size:13px;margin-right:22px;}
+  footer .legal a:hover{color:var(--text);}
+  footer .copy{color:#5B6370;font-size:12.5px;}
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr;}
+    .search-row{flex-direction:column;}
+    .toolbar{position:static;}
+  }
+  @media (min-width:761px) and (max-width:980px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">AO<span>Workflows</span></div>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="catalogue.html" class="on">Catalogue</a>
+      <a href="refund.html">Remboursement</a>
+      <a href="privacy.html">Confidentialité</a>
+      <a href="terms.html">Conditions</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-head">
+  <div class="wrap">
+    <h1>Catalogue</h1>
+    <p>Parcourez l'ensemble des workflows n8n disponibles. Filtrez par licence ou par intégration pour trouver le bon fichier .json.</p>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="search-row">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search" type="text" placeholder="Rechercher un workflow (ex: webhook, agent IA…)">
+      </div>
+      <select id="sort">
+        <option value="relevance">Pertinence</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+        <option value="name-asc">Nom (A–Z)</option>
+      </select>
+    </div>
+    <div class="filters">
+      <div class="filter-group" id="tierFilters">
+        <span class="filter-label">Licence</span>
+      </div>
+      <button class="clear-btn" id="clearBtn">Réinitialiser les filtres</button>
+    </div>
+    <div class="meta-row">
+      <span id="resultCount"></span>
+      <span id="pageIndicator"></span>
+    </div>
+  </div>
+</div>
+
+<section class="results">
+  <div class="wrap">
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Chargement du catalogue...</p>
+    </div>
+    <div class="grid" id="grid" style="display:none;"></div>
+    <div class="empty" id="emptyState" style="display:none;">
+      Aucun workflow ne correspond à ces filtres.
+      <span class="mono">Essayez d'élargir votre recherche ou de réinitialiser les filtres.</span>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="legal">
+      <a href="index.html">Accueil</a>
+      <a href="terms.html">Conditions générales</a>
+      <a href="privacy.html">Politique de confidentialité</a>
+      <a href="refund.html">Politique de remboursement</a>
+      <a href="mailto:contact@aoworkflows.com">Contact</a>
+    </div>
+    <div class="copy">© 2026 AO Workflows. Tous droits réservés.</div>
+  </div>
+</footer>
+
+<script>
+const state = {
+  query: "",
+  tier: null,
+  sort: "relevance",
+  page: 1,
+  perPage: 12,
+};
+
+let CATALOG = [];
+let allTiers = [];
+
+/* Nettoie les noms de workflow : enlève les numéros de tri du début
+   (0373, [2451], 0862_ ...), remplace les underscores par des espaces
+   et met une majuscule au début. Ne modifie jamais catalog_data.json. */
+function cleanName(raw){
+  if (!raw) return 'Sans titre';
+  let name = String(raw);
+  name = name.replace(/\.json$/i, '');
+  name = name.replace(/^[^a-zA-Zà-öø-ÿÀ-ÖØ-ß]+/, '');
+  name = name.replace(/_/g, ' ');
+  name = name.replace(/\s+/g, ' ').trim();
+  if (name) name = name.charAt(0).toUpperCase() + name.slice(1);
+  return name || String(raw).trim();
+}
+
+async function loadCatalog(){
+  try {
+    const response = await fetch('catalog_data.json');
+    if (!response.ok) throw new Error('Erreur lors du chargement');
+    const data = await response.json();
+    CATALOG = data.map((item, idx) => ({ ...item, __idx: idx }));
+
+    allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))].sort();
+
+    document.getElementById('loading').style.display = 'none';
+    renderChips();
+    render();
+  } catch (err) {
+    console.error('Erreur chargement:', err);
+    document.getElementById('loading').innerHTML = '<p style="color:#ff6b6b;">⚠️ Erreur: Impossible de charger le catalogue. Vérifiez que catalog_data.json existe.</p>';
+  }
+}
+
+function renderChipGroup(containerId, values, stateKey){
+  const container = document.getElementById(containerId);
+  const label = container.querySelector('.filter-label');
+  container.innerHTML = label.outerHTML;
+  values.forEach(val => {
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.textContent = val;
+    chip.addEventListener("click", () => {
+      state[stateKey] = state[stateKey] === val ? null : val;
+      state.page = 1;
+      render();
+    });
+    container.appendChild(chip);
+  });
+}
+
+function renderChips(){
+  renderChipGroup("tierFilters", allTiers, "tier");
+}
+
+function syncChipStates(){
+  document.querySelectorAll("#tierFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.tier));
+}
+
+function getFiltered(){
+  const q = state.query.trim().toLowerCase();
+  let items = CATALOG.filter(item => {
+    if (state.tier && item.t !== state.tier) return false;
+    if (q){
+      const hay = (item.n || '').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  switch (state.sort){
+    case "price-asc":  items = items.sort((a,b) => (a.p || 0) - (b.p || 0)); break;
+    case "price-desc": items = items.sort((a,b) => (b.p || 0) - (a.p || 0)); break;
+    case "name-asc":   items = items.sort((a,b) => cleanName(a.n).localeCompare(cleanName(b.n))); break;
+  }
+  return items;
+}
+
+function render(){
+  syncChipStates();
+  const filtered = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / state.perPage));
+  state.page = Math.min(state.page, totalPages);
+  const start = (state.page - 1) * state.perPage;
+  const pageItems = filtered.slice(start, start + state.perPage);
+
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("emptyState");
+  grid.innerHTML = "";
+  grid.style.display = filtered.length ? 'grid' : 'none';
+  empty.style.display = filtered.length ? 'none' : 'block';
+
+  pageItems.forEach(item => {
+    const card = document.createElement("a");
+    card.className = "card";
+    card.href = `product.html?i=${item.__idx}`;
+    card.innerHTML = `
+      <div class="tier">${item.t || 'Basic'}</div>
+      <h3>${cleanName(item.n)}</h3>
+      <div class="foot">
+        <div class="price">${item.p || '0'} $</div>
+        <div class="view">Voir →</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById("resultCount").textContent =
+    filtered.length ? `${filtered.length} workflow${filtered.length > 1 ? "s" : ""}` : "";
+  document.getElementById("pageIndicator").textContent =
+    filtered.length ? `Page ${state.page} / ${totalPages}` : "";
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages){
+  const el = document.getElementById("pagination");
+  el.innerHTML = "";
+  if (totalPages <= 1) return;
+
+  const addBtn = (label, page, opts = {}) => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    if (opts.active) btn.classList.add("active");
+    if (opts.disabled) btn.disabled = true;
+    btn.addEventListener("click", () => { state.page = page; render(); window.scrollTo({top:0, behavior:"smooth"}); });
+    el.appendChild(btn);
+  };
+  const addGap = () => { const s = document.createElement("span"); s.className = "gap"; s.textContent = "…"; el.appendChild(s); };
+
+  addBtn("‹", Math.max(1, state.page - 1), { disabled: state.page === 1 });
+
+  const pages = new Set([1, totalPages, state.page, state.page - 1, state.page + 1]);
+  let prev = 0;
+  [...pages].filter(p => p >= 1 && p <= totalPages).sort((a,b)=>a-b).forEach(p => {
+    if (prev && p - prev > 1) addGap();
+    addBtn(String(p), p, { active: p === state.page });
+    prev = p;
+  });
+
+  addBtn("›", Math.min(totalPages, state.page + 1), { disabled: state.page === totalPages });
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  state.query = e.target.value;
+  state.page = 1;
+  render();
+});
+document.getElementById("sort").addEventListener("change", e => {
+  state.sort = e.target.value;
+  render();
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  state.query = ""; state.tier = null;
+  state.sort = "relevance"; state.page = 1;
+  document.getElementById("search").value = "";
+  document.getElementById("sort").value = "relevance";
+  render();
+});
+
+loadCatalog();
+</script>
+
+</body>
+</html>
