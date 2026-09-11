@@ -245,7 +245,7 @@ async function loadCatalog(){
     const response = await fetch('catalog_data.json');
     if (!response.ok) throw new Error('Erreur lors du chargement');
     const data = await response.json();
-    CATALOG = data;
+    CATALOG = data.map((item, idx) => ({ ...item, __idx: idx }));
 
     allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))].sort();
 
@@ -316,8 +316,9 @@ function render(){
   empty.style.display = filtered.length ? 'none' : 'block';
 
   pageItems.forEach(item => {
-    const card = document.createElement("div");
+    const card = document.createElement("a");
     card.className = "card";
+    card.href = `product.html?i=${item.__idx}`;
     card.innerHTML = `
       <div class="tier">${item.t || 'Basic'}</div>
       <h3>${cleanName(item.n)}</h3>
