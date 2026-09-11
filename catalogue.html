@@ -233,11 +233,11 @@ function cleanName(raw){
   if (!raw) return 'Sans titre';
   let name = String(raw);
   name = name.replace(/\.json$/i, '');
-  name = name.replace(/^\s*[\[\(]?\d+[\]\)]?[\s_\-\.:]+/, '');
+  name = name.replace(/^[^a-zA-Zà-öø-ÿÀ-ÖØ-ß]+/, '');
   name = name.replace(/_/g, ' ');
-  name = name.replace(/\s{2,}/g, ' ').trim();
+  name = name.replace(/\s+/g, ' ').trim();
   if (name) name = name.charAt(0).toUpperCase() + name.slice(1);
-  return name || 'Sans titre';
+  return name || String(raw).trim();
 }
 
 async function loadCatalog(){
