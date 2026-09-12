@@ -247,7 +247,9 @@ async function loadCatalog(){
     const data = await response.json();
     CATALOG = data.map((item, idx) => ({ ...item, __idx: idx }));
 
-    allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))].sort();
+    const TIER_ORDER = ["Basic", "Standard", "Premium", "Agence"];
+    allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))]
+      .sort((a, b) => TIER_ORDER.indexOf(a) - TIER_ORDER.indexOf(b));
 
     document.getElementById('loading').style.display = 'none';
     renderChips();
