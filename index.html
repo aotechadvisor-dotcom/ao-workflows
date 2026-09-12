@@ -1,83 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
-<h<!--
-  À insérer/fusionner dans le <head> de index.html.
-  Remplace https://aoworkflows.com par ton vrai domaine (ou l'URL GitHub Pages)
-  et /assets/og-image.png par une vraie image 1200x630 hébergée sur le site.
--->
-
-<!-- Titre + description uniques -->
-<title>AO Workflows — Automatisations n8n prêtes à l'emploi</title>
-<meta name="description" content="Catalogue de 1958 workflows n8n testés : agents IA, Google Workspace, webhooks, planification. Import direct, licence Basic à Agence, livraison immédiate.">
-<link rel="canonical" href="https://aoworkflows.com/index.html">
-
-<!-- Open Graph (Facebook, LinkedIn, Slack…) -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="AO Workflows">
-<meta property="og:title" content="AO Workflows — Automatisations n8n prêtes à l'emploi">
-<meta property="og:description" content="1958 workflows n8n testés et fonctionnels — agents IA, CRM, planification, webhooks. Importez un .json, connectez vos clés API, c'est en ligne.">
-<meta property="og:image" content="https://aoworkflows.com/assets/og-image.png">
-<meta property="og:url" content="https://aoworkflows.com/index.html">
-<meta property="og:locale" content="fr_FR">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AO Workflows — Automatisations n8n prêtes à l'emploi">
-<meta name="twitter:description" content="1958 workflows n8n testés — agents IA, Google Workspace, webhooks, planification. Import direct dans n8n.">
-<meta name="twitter:image" content="https://aoworkflows.com/assets/og-image.png">
-
-<!-- JSON-LD : identité de l'organisation -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "AO Workflows",
-  "url": "https://aoworkflows.com/",
-  "logo": "https://aoworkflows.com/assets/logo.png",
-  "email": "contact@aoworkflows.com",
-  "sameAs": []
-}
-</script>
-
-<!-- JSON-LD : les bundles comme produits (adapte les prix/URLs réels) -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "itemListElement": [
-    {
-      "@type": "Product",
-      "position": 1,
-      "name": "AI Agents & Chatbots — Bundle n8n",
-      "description": "725 workflows n8n : agents autonomes, chaînes LLM, mémoire conversationnelle.",
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "USD",
-        "price": "79",
-        "availability": "https://schema.org/InStock",
-        "url": "https://aoworkflows.com/catalogue.html?category=AI+Agents+%26+Chatbots"
-      }
-    },
-    {
-      "@type": "Product",
-      "position": 2,
-      "name": "Google Workspace — Bundle n8n",
-      "description": "429 workflows n8n : Sheets, Drive, Calendar, Gmail interconnectés.",
-      "offers": {
-        "@type": "Offer",
-        "priceCurrency": "USD",
-        "price": "79",
-        "availability": "https://schema.org/InStock",
-        "url": "https://aoworkflows.com/catalogue.html?category=Google+Workspace"
-      }
-    }
-  ]
-}
-</script>ead>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AO Workflows — Automatisations n8n prêtes à l'emploi</title>
-<style>
+/* ===== CORRECTIF MOBILE — petits écrans (<480px) ===== */
+@media (max-width:480px){
+  .wrap{padding:0 16px;}
+
+  header .wrap{flex-wrap:wrap;gap:10px;}
+  nav a{margin-left:0;margin-right:16px;font-size:12px;}
+  .brand{font-size:15px;}
+
+  .hero{padding:40px 0 36px;}
+  .hero h1{font-size:26px;line-height:1.2;}
+  .hero p.lead{font-size:14px;}
+  .kicker{font-size:11px;}
+  .cta-row{flex-direction:column;}
+  .btn{width:100%;justify-content:center;text-align:center;}
+
+  .diagram-wrap svg{max-width:100%;height:auto;}
+
+  .stats .wrap{grid-template-columns:1fr 1fr;}
+  .stat{padding:16px 14px;}
+  .stat .v{font-size:20px;}
+  .stat .l{font-size:11px;}
+
+  .sec-head{flex-direction:column;align-items:flex-start;gap:10px;}
+  .sec-head h2{font-size:21px;}
+
+  .grid-bundles, .grid{grid-template-columns:1fr;}
+  .card{padding:16px;}
+
+  .search-row{flex-direction:column;}
+  .filters{gap:8px 14px;}
+  .chip{font-size:12px;padding:5px 10px;}
+
+  .how-grid{gap:24px;}
+  .how-step{padding-right:0;}
+
+  footer .wrap{flex-direction:column;align-items:flex-start;gap:14px;}
+  footer .legal a{margin-right:16px;display:inline-block;margin-bottom:8px;}
+}<style>
   :root{
     --bg:#0D0F13; --panel:#171A21; --panel-2:#1D212A; --line:#262B35;
     --text:#ECEEF1; --muted:#8890A0; --dim:#565D6B;
@@ -174,7 +138,7 @@
     content:"";position:absolute;top:18px;right:-2px;width:calc(100% - 56px);height:1px;
     background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
   }
-  .how-step .num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--pulse);border:1px solid var(--pulse-dim);background:var(--pulse-dim);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .how-step .num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--pulse);border:1px solid var(--pulse-dim);background:var(--pulse-dim);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
   .how-step h3{font-size:16px;font-weight:600;margin-bottom:8px;}
   .how-step p{color:var(--muted);font-size:13.5px;line-height:1.6;}
 
