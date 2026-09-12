@@ -1,0 +1,11 @@
+{
+  "name": "AO Workflows",
+  "short_name": "AO Workflows",
+  "start_url": "/ao-workflows/index.html",
+  "display": "standalone",
+  "background_color": "#14171C",
+  "theme_color": "#14171C",
+  "icons": [
+    { "src": "og-image.png", "sizes": "1200x630", "type": "image/png" }
+  ]
+}
