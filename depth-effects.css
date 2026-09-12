@@ -1,0 +1,74 @@
+/* ============================================================
+   DEPTH EFFECTS — relief 3D pour cartes, boutons, panneaux
+   À inclure sur TOUTES les pages, après responsive.css
+   ============================================================ */
+
+/* --- Cartes en 3D : suivent la souris, effet de bascule --- */
+.card{
+  transform-style: preserve-3d;
+  transition: transform .15s ease, box-shadow .15s ease;
+  will-change: transform;
+}
+.card:hover{
+  box-shadow:
+    0 20px 40px -12px rgba(0,0,0,.55),
+    0 0 0 1px rgba(242,169,59,.15);
+}
+
+/* Halo lumineux qui suit le curseur (posé par le JS via variables --mx/--my) */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(242,169,59,.10),
+    transparent 60%
+  );
+  opacity:0;
+  transition: opacity .2s ease;
+  pointer-events:none;
+}
+.card:hover::after{ opacity:1; }
+
+/* --- Boutons avec relief : semblent se presser au clic --- */
+.btn, .btn-buy, .btn-primary{
+  position:relative;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.15) inset,
+    0 6px 16px -4px rgba(242,169,59,.35);
+  transition: transform .08s ease, box-shadow .12s ease;
+}
+.btn:hover, .btn-buy:hover, .btn-primary:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.2) inset,
+    0 10px 22px -4px rgba(242,169,59,.45);
+}
+.btn:active, .btn-buy:active, .btn-primary:active{
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 3px 8px -2px rgba(242,169,59,.3);
+}
+
+/* --- Panneaux "verre" avec profondeur, pour les blocs de contenu --- */
+.panel, .buy-box, .stats, .toolbar{
+  position:relative;
+}
+.panel{
+  background: linear-gradient(180deg, rgba(32,36,44,.9), rgba(27,31,38,.9));
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.04) inset,
+    0 12px 30px -14px rgba(0,0,0,.6);
+}
+
+/* --- Chiffres de stats en relief (léger effet gravé) --- */
+.stat .num{
+  text-shadow: 0 1px 0 rgba(0,0,0,.4), 0 0 18px rgba(242,169,59,.25);
+}
+
+/* --- Respect des préférences d'accessibilité : pas d'animation si demandé --- */
+@media (prefers-reduced-motion: reduce){
+  .card, .btn, .btn-buy, .btn-primary{ transition:none !important; }
+  .card:hover{ transform:none !important; }
+}
