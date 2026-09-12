@@ -105,7 +105,7 @@
 
     <div class="panel">
       <h2>CE QUI EST INCLUS</h2>
-      <p>Fichier .json prêt à importer dans n8n (self-hosted ou n8n Cloud), livré immédiatement après paiement. Support pour l'installation et l'import inclus.</p>
+      <p id="pIncluded"></p>
     </div>
 
     <div class="buy-box">
@@ -197,6 +197,24 @@ function cleanName(raw){
   return name || String(raw).trim();
 }
 
+const TIER_INFO = {
+  "Basic": "Fichier .json prêt à importer dans n8n (self-hosted ou n8n Cloud). Usage personnel ou au sein d'une seule organisation. Modification autorisée pour vos propres besoins.",
+  "Standard": "Fichier .json prêt à importer, accompagné d'une documentation d'installation détaillée. Usage personnel ou au sein d'une seule organisation. Modification autorisée pour vos propres besoins.",
+  "Premium": "Fichier .json prêt à importer, documentation détaillée et support prioritaire par email pour l'installation. Usage personnel ou au sein d'une seule organisation. Modification autorisée pour vos propres besoins.",
+  "Agence": "Fichier .json prêt à importer, documentation détaillée et support prioritaire. Autorise le déploiement de ce workflow pour le compte de vos clients (la revente du fichier source lui-même reste interdite)."
+};
+
+function getIncludedText(tier){
+  return TIER_INFO[tier] || TIER_INFO["Basic"];
+}
+
+function getDescription(item, name){
+  if (item.d && String(item.d).trim()) return String(item.d).trim();
+  const integrations = Array.isArray(item.i) ? item.i : (item.i ? [item.i] : []);
+  const withPart = integrations.length ? ` en s'appuyant sur ${integrations.join(', ')}` : '';
+  return `Ce workflow automatise "${name}"${withPart}. Importez le fichier .json dans n8n, connectez vos clés API, et il est immédiatement opérationnel.`;
+}
+
 function renderProduct(item){
   document.getElementById('loading').style.display = 'none';
   document.getElementById('product').style.display = 'block';
@@ -204,17 +222,18 @@ function renderProduct(item){
   const name = cleanName(item.n);
   document.title = name + ' — AO Workflows';
   document.getElementById('pName').textContent = name;
-  document.getElementById('pTier').textContent = item.t || 'Basic';
+  const tier = item.t || 'Basic';
+  document.getElementById('pTier').textContent = tier;
   document.getElementById('pCat').textContent = item.f || '';
 
   const integrations = Array.isArray(item.i) ? item.i : (item.i ? [item.i] : []);
   const tagsEl = document.getElementById('pTags');
   tagsEl.innerHTML = integrations.map(t => `<span class="tag">${t}</span>`).join('');
 
-  if (item.d){
-    document.getElementById('pDescBlock').style.display = 'block';
-    document.getElementById('pDesc').textContent = item.d;
-  }
+  document.getElementById('pDescBlock').style.display = 'block';
+  document.getElementById('pDesc').textContent = getDescription(item, name);
+
+  document.getElementById('pIncluded').textContent = getIncludedText(tier);
 
   const price = item.p || 0;
   document.getElementById('pPrice').textContent = price + ' $';
