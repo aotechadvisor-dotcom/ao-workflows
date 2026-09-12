@@ -1,0 +1,63 @@
+/* ============================================================
+   RESPONSIVE GLOBAL — à inclure sur TOUTES les pages du site
+   (index.html, catalogue.html, product.html, terms.html, privacy.html, refund.html)
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Empêche le zoom automatique sur iPhone quand on clique dans un champ */
+input, select, textarea {
+  font-size: 16px;
+}
+@media (min-width: 761px) {
+  input, select, textarea { font-size: inherit; }
+}
+
+/* Zones tactiles confortables (norme Apple/Google : 44px minimum) */
+nav a, .btn, .btn-buy, .clear-btn, .reset-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Typographie fluide : s'adapte en continu entre mobile et desktop,
+   pas de saut brutal à chaque breakpoint */
+h1 { font-size: clamp(24px, 5vw, 44px); }
+h2 { font-size: clamp(17px, 3vw, 26px); }
+p, li { font-size: clamp(14px, 2vw, 16px); }
+
+/* Images, SVG, vidéos : jamais plus larges que leur conteneur */
+img, svg, video { max-width: 100%; height: auto; }
+
+/* Grilles et cartes : jamais de débordement horizontal, texte qui
+   passe à la ligne proprement même avec de longs mots */
+.grid, .shell { min-width: 0; }
+.card, .panel { min-width: 0; overflow-wrap: break-word; word-break: break-word; }
+
+/* Respecte l'encoche et la barre de gestes sur iPhone récents */
+header {
+  padding-top: calc(22px + env(safe-area-inset-top));
+}
+footer {
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+/* Repères de breakpoints utilisés dans tout le site (mobile-first) :
+   < 560px   → téléphone
+   561–900px → tablette
+   > 900px   → desktop
+*/
