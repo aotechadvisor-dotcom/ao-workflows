@@ -10,7 +10,44 @@
 <meta property="og:description" content="Filtrez par licence, catégorie ou intégration et trouvez le workflow n8n qu'il vous faut.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aotechadvisor-dotcom.github.io/ao-workflows/catalogue.html">
-<style>
+/* ===== CORRECTIF MOBILE — petits écrans (<480px) ===== */
+@media (max-width:480px){
+  .wrap{padding:0 16px;}
+
+  header .wrap{flex-wrap:wrap;gap:10px;}
+  nav a{margin-left:0;margin-right:16px;font-size:12px;}
+  .brand{font-size:15px;}
+
+  .hero{padding:40px 0 36px;}
+  .hero h1{font-size:26px;line-height:1.2;}
+  .hero p.lead{font-size:14px;}
+  .kicker{font-size:11px;}
+  .cta-row{flex-direction:column;}
+  .btn{width:100%;justify-content:center;text-align:center;}
+
+  .diagram-wrap svg{max-width:100%;height:auto;}
+
+  .stats .wrap{grid-template-columns:1fr 1fr;}
+  .stat{padding:16px 14px;}
+  .stat .v{font-size:20px;}
+  .stat .l{font-size:11px;}
+
+  .sec-head{flex-direction:column;align-items:flex-start;gap:10px;}
+  .sec-head h2{font-size:21px;}
+
+  .grid-bundles, .grid{grid-template-columns:1fr;}
+  .card{padding:16px;}
+
+  .search-row{flex-direction:column;}
+  .filters{gap:8px 14px;}
+  .chip{font-size:12px;padding:5px 10px;}
+
+  .how-grid{gap:24px;}
+  .how-step{padding-right:0;}
+
+  footer .wrap{flex-direction:column;align-items:flex-start;gap:14px;}
+  footer .legal a{margin-right:16px;display:inline-block;margin-bottom:8px;}
+}<style>
   :root{
     --bg:#14171C;
     --panel:#1B1F26;
