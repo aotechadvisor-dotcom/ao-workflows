@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Audit des prix — AO Workflows</title>
+<style>
+  body{background:#14171C;color:#E7E9EC;font-family:'IBM Plex Mono',Consolas,monospace;padding:40px;line-height:1.8;}
+  h1{color:#F2A93B;font-size:20px;margin-bottom:20px;}
+  table{border-collapse:collapse;width:100%;max-width:500px;}
+  td,th{border-bottom:1px solid #2A2F38;padding:8px 12px;text-align:left;font-size:14px;}
+  th{color:#9199A6;font-weight:normal;}
+  .price{color:#F2A93B;}
+  .note{color:#9199A6;font-size:13px;margin-top:24px;max-width:600px;}
+</style>
+</head>
+<body>
+<h1>Audit des prix — catalog_data.json</h1>
+<div id="output">Chargement...</div>
+<div class="note">
+  Cette page est un outil temporaire pour préparer Paddle — elle n'a pas besoin
+  d'être jolie ni gardée en ligne après usage. Pour chaque ligne ci-dessous,
+  crée un "Price" dans Paddle avec ce montant exact, puis note le Price ID
+  généré (pri_xxxxxxxx) pour le mettre dans PRICE_MAP de product.html.
+</div>
+<script>
+fetch('catalog_data.json')
+  .then(r => r.json())
+  .then(data => {
+    const counts = {};
+    data.forEach(item => {
+      const p = item.p || 0;
+      counts[p] = (counts[p] || 0) + 1;
+    });
+    const sorted = Object.entries(counts).sort((a,b) => a[0] - b[0]);
+    let html = `<p>${data.length} workflows au total, ${sorted.length} prix distincts trouvés :</p>`;
+    html += '<table><tr><th>Prix</th><th>Nombre de workflows</th></tr>';
+    sorted.forEach(([price, count]) => {
+      html += `<tr><td class="price">${price} $</td><td>${count}</td></tr>`;
+    });
+    html += '</table>';
+    document.getElementById('output').innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById('output').textContent = 'Erreur : ' + err.message;
+  });
+</script>
+</body>
+</html>
