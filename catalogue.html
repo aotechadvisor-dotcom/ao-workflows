@@ -10,44 +10,7 @@
 <meta property="og:description" content="Filtrez par licence, catégorie ou intégration et trouvez le workflow n8n qu'il vous faut.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aotechadvisor-dotcom.github.io/ao-workflows/catalogue.html">
-/* ===== CORRECTIF MOBILE — petits écrans (<480px) ===== */
-@media (max-width:480px){
-  .wrap{padding:0 16px;}
-
-  header .wrap{flex-wrap:wrap;gap:10px;}
-  nav a{margin-left:0;margin-right:16px;font-size:12px;}
-  .brand{font-size:15px;}
-
-  .hero{padding:40px 0 36px;}
-  .hero h1{font-size:26px;line-height:1.2;}
-  .hero p.lead{font-size:14px;}
-  .kicker{font-size:11px;}
-  .cta-row{flex-direction:column;}
-  .btn{width:100%;justify-content:center;text-align:center;}
-
-  .diagram-wrap svg{max-width:100%;height:auto;}
-
-  .stats .wrap{grid-template-columns:1fr 1fr;}
-  .stat{padding:16px 14px;}
-  .stat .v{font-size:20px;}
-  .stat .l{font-size:11px;}
-
-  .sec-head{flex-direction:column;align-items:flex-start;gap:10px;}
-  .sec-head h2{font-size:21px;}
-
-  .grid-bundles, .grid{grid-template-columns:1fr;}
-  .card{padding:16px;}
-
-  .search-row{flex-direction:column;}
-  .filters{gap:8px 14px;}
-  .chip{font-size:12px;padding:5px 10px;}
-
-  .how-grid{gap:24px;}
-  .how-step{padding-right:0;}
-
-  footer .wrap{flex-direction:column;align-items:flex-start;gap:14px;}
-  footer .legal a{margin-right:16px;display:inline-block;margin-bottom:8px;}
-}<style>
+<style>
   :root{
     --bg:#14171C;
     --panel:#1B1F26;
@@ -214,6 +177,9 @@
       <div class="filter-group" id="tierFilters">
         <span class="filter-label">Licence</span>
       </div>
+      <div class="filter-group" id="catFilters">
+        <span class="filter-label">Catégorie</span>
+      </div>
       <button class="clear-btn" id="clearBtn">Réinitialiser les filtres</button>
     </div>
     <div class="meta-row">
@@ -255,6 +221,7 @@
 const state = {
   query: "",
   tier: null,
+  category: null,
   sort: "relevance",
   page: 1,
   perPage: 12,
@@ -262,6 +229,7 @@ const state = {
 
 let CATALOG = [];
 let allTiers = [];
+let allCats = [];
 
 /* Nettoie les noms de workflow : enlève les numéros de tri du début
    (0373, [2451], 0862_ ...), remplace les underscores par des espaces
@@ -282,11 +250,12 @@ async function loadCatalog(){
     const response = await fetch('catalog_data.json');
     if (!response.ok) throw new Error('Erreur lors du chargement');
     const data = await response.json();
-    CATALOG = data.map((item, idx) => ({ ...item, __idx: idx }));
+    CATALOG = data;
 
     const TIER_ORDER = ["Basic", "Standard", "Premium", "Agence"];
     allTiers = [...new Set(CATALOG.map(item => item.t || 'Basic'))]
       .sort((a, b) => TIER_ORDER.indexOf(a) - TIER_ORDER.indexOf(b));
+    allCats = [...new Set(CATALOG.map(item => item.c || 'Autres automatisations'))].sort();
 
     document.getElementById('loading').style.display = 'none';
     renderChips();
@@ -316,18 +285,22 @@ function renderChipGroup(containerId, values, stateKey){
 
 function renderChips(){
   renderChipGroup("tierFilters", allTiers, "tier");
+  renderChipGroup("catFilters", allCats, "category");
 }
 
 function syncChipStates(){
   document.querySelectorAll("#tierFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.tier));
+  document.querySelectorAll("#catFilters .chip").forEach(c => c.classList.toggle("active", c.textContent === state.category));
 }
 
 function getFiltered(){
   const q = state.query.trim().toLowerCase();
   let items = CATALOG.filter(item => {
     if (state.tier && item.t !== state.tier) return false;
+    if (state.category && (item.c || 'Autres automatisations') !== state.category) return false;
     if (q){
-      const hay = (item.n || '').toLowerCase();
+      const integ = Array.isArray(item.i) ? item.i.join(' ') : '';
+      const hay = `${cleanNameForSearch(item.n)} ${item.c || ''} ${integ}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -339,6 +312,8 @@ function getFiltered(){
   }
   return items;
 }
+
+function cleanNameForSearch(n){ return n || ''; }
 
 function render(){
   syncChipStates();
@@ -357,10 +332,11 @@ function render(){
   pageItems.forEach(item => {
     const card = document.createElement("a");
     card.className = "card";
-    card.href = `product.html?i=${item.__idx}`;
+    card.href = `product.html?f=${encodeURIComponent(item.f)}`;
     card.innerHTML = `
       <div class="tier">${item.t || 'Basic'}</div>
       <h3>${cleanName(item.n)}</h3>
+      <div class="cat">${item.c || ''}</div>
       <div class="foot">
         <div class="price">${item.p || '0'} $</div>
         <div class="view">Voir →</div>
@@ -415,7 +391,7 @@ document.getElementById("sort").addEventListener("change", e => {
   render();
 });
 document.getElementById("clearBtn").addEventListener("click", () => {
-  state.query = ""; state.tier = null;
+  state.query = ""; state.tier = null; state.category = null;
   state.sort = "relevance"; state.page = 1;
   document.getElementById("search").value = "";
   document.getElementById("sort").value = "relevance";
