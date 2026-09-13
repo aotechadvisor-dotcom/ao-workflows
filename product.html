@@ -144,19 +144,17 @@
      Exemple : si tu as des workflows à 25$, 45$, 79$ dans catalog_data.json,
      crée 3 Prices dans Paddle et mappe-les ici.
 -->
-<!--
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script>
   Paddle.Environment.set("sandbox"); // enlève cette ligne quand tu passes en live
-  Paddle.Initialize({ token: "YOUR_CLIENT_TOKEN" });
+  Paddle.Initialize({ token: "test_d73f36d0e07d584f89d9985a9cf" });
 
   const PRICE_MAP = {
-    // 25: "pri_xxxxxxxxxxxxxxxxxxxxxxxxxx",
-    // 45: "pri_xxxxxxxxxxxxxxxxxxxxxxxxxx",
-    // 79: "pri_xxxxxxxxxxxxxxxxxxxxxxxxxx",
+    9: "pri_01m2dbmw59d0v49q3zfjbpk7ch",   // Basic
+    25: "pri_01m2dbwjexqw0r2z9crbq0rk4v",  // Standard
+    59: "pri_01m2dc7a3c1behxk2pp8b8xpwe",  // Premium
   };
 </script>
--->
 
 <script>
 async function init(){
