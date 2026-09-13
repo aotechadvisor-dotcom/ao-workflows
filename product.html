@@ -159,9 +159,9 @@
 <script>
 async function init(){
   const params = new URLSearchParams(window.location.search);
-  const idx = params.get('i');
+  const f = params.get('f');
 
-  if (idx === null){
+  if (!f){
     showError();
     return;
   }
@@ -170,7 +170,7 @@ async function init(){
     const res = await fetch('catalog_data.json');
     if (!res.ok) throw new Error('fetch failed');
     const data = await res.json();
-    const item = data[Number(idx)];
+    const item = data.find(x => x.f === f);
 
     if (!item){
       showError();
@@ -222,7 +222,7 @@ function renderProduct(item){
   document.getElementById('pName').textContent = name;
   const tier = item.t || 'Basic';
   document.getElementById('pTier').textContent = tier;
-  document.getElementById('pCat').textContent = item.f || '';
+  document.getElementById('pCat').textContent = item.c || '';
 
   const integrations = Array.isArray(item.i) ? item.i : (item.i ? [item.i] : []);
   const tagsEl = document.getElementById('pTags');
@@ -243,7 +243,12 @@ function renderProduct(item){
       document.getElementById('unavailableNote').style.display = 'block';
       return;
     }
-    Paddle.Checkout.open({ items: [{ priceId: PRICE_MAP[price], quantity: 1 }] });
+    Paddle.Checkout.open({
+      items: [{ priceId: PRICE_MAP[price], quantity: 1 }],
+      settings: {
+        successUrl: `${window.location.origin}${window.location.pathname.replace('product.html','download.html')}?f=${encodeURIComponent(item.f)}`
+      }
+    });
   });
 }
 
