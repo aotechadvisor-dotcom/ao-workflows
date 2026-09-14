@@ -83,6 +83,7 @@ async function init(){
 
     const name = cleanName(item.n);
     const fileUrl = `files/${encodeURIComponent(item.f)}`;
+    const downloadName = safeFileName(name) + '.json';
 
     content.innerHTML = `
       <div class="check">✓</div>
@@ -92,7 +93,7 @@ async function init(){
         <div class="label">WORKFLOW</div>
         <div class="name">${name}</div>
       </div>
-      <a class="btn-download" href="${fileUrl}" download>Télécharger le fichier .json</a>
+      <a class="btn-download" href="${fileUrl}" download="${downloadName}">Télécharger le fichier .json</a>
       <a class="btn-secondary" href="catalogue.html">← Retour au catalogue</a>
       <p class="note">
         Gardez ce fichier en lieu sûr — importez-le dans n8n via
@@ -115,6 +116,14 @@ function cleanName(raw){
   name = name.replace(/\s+/g, ' ').trim();
   if (name) name = name.charAt(0).toUpperCase() + name.slice(1);
   return name || String(raw).trim();
+}
+
+// Nettoie le nom pour qu'il soit valide comme nom de fichier telecharge
+// (enleve les caracteres interdits sur Windows/Mac/Linux)
+function safeFileName(name){
+  return String(name)
+    .replace(/[\\/:*?"<>|]/g, '')
+    .trim();
 }
 
 init();
