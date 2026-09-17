@@ -28,14 +28,13 @@
     background: #fff;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
   /* Header */
   header {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: saturate(180%) blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 16px 0;
+    padding: 20px 0;
+    background: #fff;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -53,7 +52,6 @@
   }
   .logo::before {
     content: "";
-    display: inline-block;
     width: 24px;
     height: 24px;
     background: var(--blue);
@@ -127,8 +125,42 @@
     font-size: 1.15em;
     color: var(--gray);
     max-width: 640px;
-    margin: 0 auto;
+    margin: 0 auto 32px;
     position: relative;
+  }
+  .hero .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.2s;
+  }
+  .hero .btn-primary {
+    background: var(--blue);
+    color: #fff;
+  }
+  .hero .btn-primary:hover {
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -8px rgba(37,99,235,0.4);
+  }
+  .hero .btn-secondary {
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .hero .btn-secondary:hover {
+    border-color: var(--blue);
+    color: var(--blue);
   }
 
   /* Stats */
@@ -146,11 +178,10 @@
   .stat-num {
     font-size: 2.75em;
     font-weight: 800;
-    color: #fff;
+    color: #60a5fa;
     line-height: 1;
     letter-spacing: -0.02em;
   }
-  .stat-num.accent { color: #60a5fa; }
   .stat-label { color: #94a3b8; font-size: 0.95em; margin-top: 10px; }
 
   /* Sections */
@@ -186,7 +217,6 @@
     border-radius: 16px;
     padding: 32px;
     transition: all 0.25s ease;
-    position: relative;
   }
   .bundle:hover {
     box-shadow: 0 20px 40px -12px rgba(37,99,235,0.15);
@@ -338,6 +368,10 @@
     <span class="badge">1958 workflows en production</span>
     <h1>Des automatisations n8n <span class="accent">déjà connectées</span>,<br>pas des tutoriels à suivre.</h1>
     <p>Importe un fichier .json, branche tes clés API, c'est en ligne. Agents IA, CRM, planification, webhooks — testés, documentés, prêts à tourner.</p>
+    <div class="cta-row">
+      <a href="catalogue.html" class="btn btn-primary">Voir le catalogue</a>
+      <a href="contact.html" class="btn btn-secondary">Nous contacter</a>
+    </div>
   </div>
 </section>
 
@@ -345,19 +379,19 @@
   <div class="wrap">
     <div class="grid">
       <div>
-        <div class="stat-num accent">1958</div>
+        <div class="stat-num">1958</div>
         <div class="stat-label">workflows vendables</div>
       </div>
       <div>
-        <div class="stat-num accent">664</div>
+        <div class="stat-num">664</div>
         <div class="stat-label">agents & chaînes LLM</div>
       </div>
       <div>
-        <div class="stat-num accent">7</div>
+        <div class="stat-num">7</div>
         <div class="stat-label">bundles thématiques</div>
       </div>
       <div>
-        <div class="stat-num accent">3</div>
+        <div class="stat-num">3</div>
         <div class="stat-label">tiers Basic / Standard / Premium</div>
       </div>
     </div>
@@ -375,14 +409,14 @@
         <h3>AI Agents & Chatbots</h3>
         <p>Agents autonomes, chaînes LLM, mémoire conversationnelle, RAG.</p>
         <div class="price">149 $</div>
-        <a href="catalogue.html" class="buy">Acheter</a>
+        <a href="catalogue.html" class="buy">Voir</a>
       </div>
 
       <div class="bundle">
         <span class="count">429 workflows</span>
         <h3>Google Workspace</h3>
         <p>Sheets, Drive, Calendar, Gmail interconnectés.</p>
-        <div class="price">—</div>
+        <div class="price">99 $</div>
         <a href="catalogue.html" class="buy">Voir</a>
       </div>
 
@@ -390,7 +424,7 @@
         <span class="count">295 workflows</span>
         <h3>Scheduled & Cron Jobs</h3>
         <p>Tâches planifiées et automatisations récurrentes.</p>
-        <div class="price">—</div>
+        <div class="price">79 $</div>
         <a href="catalogue.html" class="buy">Voir</a>
       </div>
 
@@ -398,7 +432,7 @@
         <span class="count">189 workflows</span>
         <h3>Webhook & API</h3>
         <p>Intégrations événementielles et API tierces.</p>
-        <div class="price">—</div>
+        <div class="price">89 $</div>
         <a href="catalogue.html" class="buy">Voir</a>
       </div>
 
@@ -406,7 +440,7 @@
         <span class="count">135 workflows</span>
         <h3>Social Media Automation</h3>
         <p>Twitter/X, Discord, Slack.</p>
-        <div class="price">—</div>
+        <div class="price">69 $</div>
         <a href="catalogue.html" class="buy">Voir</a>
       </div>
 
@@ -414,7 +448,7 @@
         <span class="count">90 workflows</span>
         <h3>Telegram Automation</h3>
         <p>Bots, alertes et interfaces Telegram.</p>
-        <div class="price">—</div>
+        <div class="price">59 $</div>
         <a href="catalogue.html" class="buy">Voir</a>
       </div>
 
