@@ -1,75 +1,227 @@
 <!DOCTYPE html>
 <html lang="fr">
-<<!-- ==================== refund.html ==================== -->
-<title>Politique de remboursement | AO Workflows</title>
-<meta name="description" content="Conditions de remboursement des workflows n8n achetés sur AO Workflows : cas couverts, délais et procédure via Paddle.">
-<link rel="canonical" href="https://aoworkflows.com/refund.html">
-<meta name="robots" content="index, follow">
->
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Politique de remboursement — AO Workflows</title>
+<title>Politique de Remboursement — AOWorkflows</title>
+<meta name="description" content="Politique de remboursement d'AOWorkflows. Garantie satisfait ou remboursé sous 30 jours, sans condition.">
 <style>
-  :root{--bg:#14171C;--panel:#1B1F26;--line:#2A2F38;--text:#E7E9EC;--muted:#9199A6;--accent:#F2A93B;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.7;}
-  h1,h2{font-family:'IBM Plex Mono',Consolas,monospace;}
-  a{color:var(--accent);}
-  .wrap{max-width:720px;margin:0 auto;padding:0 28px;}
-  header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:48px;}
-  header .wrap{display:flex;align-items:center;justify-content:space-between;}
-  .brand{font-family:'IBM Plex Mono',monospace;font-size:18px;}
-  .brand span{color:var(--accent);}
-  nav a{color:var(--muted);margin-left:24px;font-size:14px;text-decoration:none;}
-  main{padding-bottom:80px;}
-  h1{font-size:30px;font-weight:500;margin-bottom:8px;}
-  .updated{color:var(--muted);font-size:13px;margin-bottom:40px;}
-  h2{font-size:17px;font-weight:600;margin:32px 0 10px;}
-  p,li{color:#C7CBD1;font-size:15px;}
-  ul{margin-left:20px;margin-top:8px;}
-  li{margin-bottom:6px;}
-  .box{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px;padding:16px 18px;margin:20px 0;font-size:14px;color:#C7CBD1;}
-  footer{border-top:1px solid var(--line);padding:24px 0;color:#5B6370;font-size:12.5px;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --blue-light: #dbeafe;
+    --blue-pale: #eff6ff;
+    --ink: #0f172a;
+    --gray: #64748b;
+    --border: #e2e8f0;
+    --green: #059669;
+    --green-light: #d1fae5;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  header {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo {
+    font-weight: 800;
+    font-size: 1.2em;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: var(--blue);
+    border-radius: 6px;
+  }
+  nav a {
+    margin-left: 28px;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--blue); }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 20px 100px;
+  }
+  main h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .updated {
+    color: var(--gray);
+    font-style: italic;
+    margin-bottom: 48px;
+    font-size: 0.95em;
+  }
+  .guarantee {
+    background: var(--green-light);
+    border: 1px solid #a7f3d0;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  .guarantee .check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--green);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 1.75em;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .guarantee h2 {
+    font-size: 1.5em;
+    color: var(--ink);
+    margin-bottom: 12px;
+    font-weight: 800;
+    border: none;
+    padding: 0;
+  }
+  .guarantee p {
+    color: #065f46;
+    font-size: 1.05em;
+    margin: 0;
+  }
+  main h2 {
+    font-size: 1.35em;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    color: var(--ink);
+    padding-left: 14px;
+    border-left: 4px solid var(--blue);
+  }
+  main p { margin-bottom: 16px; color: #334155; }
+  main ul { margin: 16px 0 16px 24px; color: #334155; }
+  main li { margin-bottom: 8px; }
+  main a { color: var(--blue); text-decoration: none; font-weight: 500; }
+  main a:hover { text-decoration: underline; }
+
+  footer {
+    background: var(--ink);
+    color: #94a3b8;
+    padding: 56px 0 32px;
+    font-size: 0.9em;
+  }
+  footer .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+  footer .legal a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  footer .legal a:hover { color: #60a5fa; }
+  footer .copy {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85em;
+    padding-top: 28px;
+    border-top: 1px solid #1e293b;
+  }
+
+  @media (max-width: 640px) {
+    main { padding: 50px 20px 60px; }
+    main h1 { font-size: 1.9em; }
+    main h2 { font-size: 1.15em; }
+    .guarantee { padding: 24px 20px; }
+    nav a { margin-left: 16px; font-size: 0.9em; }
+  }
 </style>
 </head>
 <body>
+
 <header>
   <div class="wrap">
-    <div class="brand">AO<span>Workflows</span></div>
-    <nav><a href="index.html">Accueil</a></nav>
+    <a href="index.html" class="logo">AOWorkflows</a>
+    <nav>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </div>
 </header>
-<main class="wrap">
-  <h1>Politique de remboursement</h1>
-  <p class="updated">Dernière mise à jour : 3 septembre 2026</p>
 
-  <p>Nos produits étant des fichiers numériques livrés instantanément, cette politique précise dans quels cas un remboursement est possible.</p>
+<main>
+  <h1>Politique de Remboursement</h1>
+  <p class="updated">Dernière mise à jour : 17 septembre 2026</p>
 
-  <h2>1. Principe général</h2>
-  <p>En raison de la nature immatérielle et immédiatement téléchargeable des produits, les ventes sont en principe définitives une fois le fichier livré. Vous reconnaissez, en achetant, renoncer à votre droit de rétractation standard dès le début du téléchargement, conformément aux pratiques applicables à la vente de contenu numérique.</p>
+  <div class="guarantee">
+    <div class="check">✓</div>
+    <h2>Garantie satisfait ou remboursé sous 30 jours</h2>
+    <p>Sans condition. Sans question. Si vous n'êtes pas satisfait pour quelque raison que ce soit, contactez-nous dans les 30 jours suivant votre achat pour obtenir un remboursement intégral.</p>
+  </div>
 
-  <h2>2. Cas de remboursement acceptés</h2>
+  <h2>Comment demander un remboursement</h2>
+  <p>Envoyez un email à <a href="mailto:aotechadvisor@gmail.com">aotechadvisor@gmail.com</a> avec :</p>
   <ul>
-    <li>Le fichier livré est corrompu, illisible, ou ne correspond pas au produit décrit sur la fiche.</li>
-    <li>Le workflow présente un défaut de fonctionnement majeur non résolu après assistance technique, dans un délai de 14 jours suivant l'achat.</li>
-    <li>Achat en double du même produit.</li>
+    <li>L'adresse email utilisée lors de l'achat</li>
+    <li>Le numéro de commande (fourni par Paddle dans votre reçu)</li>
+    <li>Une brève mention « demande de remboursement »</li>
   </ul>
+  <p>Aucune justification n'est requise.</p>
 
-  <h2>3. Cas non couverts</h2>
-  <ul>
-    <li>Changement d'avis après téléchargement.</li>
-    <li>Incompatibilité liée à une configuration n8n non standard ou à des services tiers non maintenus par leurs éditeurs.</li>
-    <li>Coûts d'API tiers engagés par l'exécution du workflow (OpenAI, Google, etc.).</li>
-  </ul>
+  <h2>Délai de traitement</h2>
+  <p>Les remboursements sont traités par Paddle dans un délai de <strong>5 à 10 jours ouvrés</strong> après validation de la demande. Le montant est remboursé sur le moyen de paiement d'origine.</p>
 
-  <div class="box">Pour toute demande, contactez-nous avec votre numéro de commande Paddle dans les 14 jours suivant l'achat. Chaque demande est étudiée individuellement.</div>
+  <h2>Après 30 jours</h2>
+  <p>Passé le délai de 30 jours, nous ne pouvons plus garantir le remboursement. Toutefois, si vous rencontrez un problème technique majeur avec un workflow, contactez-nous : nous ferons notre possible pour le résoudre.</p>
 
-  <h2>4. Procédure</h2>
-  <p>Les remboursements sont traités via Paddle.com, notre revendeur agréé, qui procède au remboursement sur le moyen de paiement d'origine sous 5 à 10 jours ouvrés après validation.</p>
-
-  <h2>5. Contact</h2>
-  <p>Pour toute demande de remboursement : <a href="mailto:contact@aoworkflows.com">contact@aoworkflows.com</a></p>
+  <h2>Litiges de paiement</h2>
+  <p>Si votre demande de remboursement est refusée alors qu'elle respecte les conditions ci-dessus, vous pouvez contacter directement Paddle à l'adresse <a href="mailto:support@paddle.com">support@paddle.com</a>, qui agit en tant que vendeur légal et arbitre les litiges.</p>
 </main>
-<footer><div class="wrap">© 2026 AO Workflows.</div></footer>
+
+<footer>
+  <div class="wrap">
+    <div class="legal">
+      <a href="terms.html">Conditions générales</a>
+      <a href="privacy.html">Politique de confidentialité</a>
+      <a href="refund.html">Politique de remboursement</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="copy">
+      © 2026 AO Workflows — Abdellatif Ouakhroun, Casablanca, Maroc
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
