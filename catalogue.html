@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catalogue — AOWorkflows</title>
-<meta name="description" content="Catalogue complet des workflows n8n AOWorkflows. 1958 automatisations prêtes à l'emploi, réparties en 7 bundles thématiques.">
+<meta name="description" content="Catalogue complet des 1958 workflows n8n AOWorkflows. Filtrez par licence, intégration ou type d'IA.">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -65,7 +65,7 @@
   }
   nav a:hover, nav a.active { color: var(--blue); }
 
-  /* Hero section */
+  /* Hero */
   .catalogue-hero {
     background: linear-gradient(180deg, var(--blue-pale) 0%, #fff 100%);
     padding: 60px 0 40px;
@@ -84,46 +84,94 @@
     max-width: 640px;
   }
 
-  /* Filters */
-  .filters {
-    padding: 32px 0;
+  /* Toolbar */
+  .toolbar {
+    padding: 24px 0;
     border-bottom: 1px solid var(--border);
     background: #fff;
     position: sticky;
     top: 68px;
     z-index: 50;
   }
-  .filters .wrap {
+  .search-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .search-box {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-box:focus-within {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .search-box svg { flex: none; opacity: 0.45; }
+  .search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--ink);
+    font-size: 0.95em;
+    font-family: inherit;
+  }
+  .search-box input::placeholder { color: #94a3b8; }
+  select#sort {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 14px;
+    color: var(--ink);
+    font-size: 0.9em;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  select#sort:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  /* Filtres */
+  .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    justify-content: space-between;
+    gap: 12px 28px;
+    padding: 14px 0 4px;
   }
   .filter-group {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
     align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
-  .filter-group label {
-    font-size: 0.9em;
-    font-weight: 600;
+  .filter-label {
     color: var(--gray);
-    margin-right: 4px;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 2px;
   }
   .chip {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #fff;
     border: 1px solid var(--border);
-    border-radius: 24px;
-    font-size: 0.88em;
+    background: #fff;
+    color: var(--gray);
+    font-size: 0.85em;
     font-weight: 500;
-    color: var(--ink);
+    padding: 6px 14px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.15s;
-    user-select: none;
+    font-family: inherit;
   }
   .chip:hover {
     border-color: var(--blue);
@@ -131,135 +179,189 @@
   }
   .chip.active {
     background: var(--blue);
+    border-color: var(--blue);
     color: #fff;
-    border-color: var(--blue);
   }
-  select {
-    padding: 8px 12px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.9em;
-    font-family: inherit;
-    color: var(--ink);
+  .clear-btn {
+    color: var(--gray);
+    font-size: 0.85em;
+    border: none;
+    background: none;
     cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-family: inherit;
+    margin-left: auto;
   }
-  select:focus {
-    outline: none;
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  .clear-btn:hover { color: var(--blue); }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 16px 0 0;
+    color: var(--gray);
+    font-size: 0.9em;
   }
 
-  /* Catalogue grid */
-  .catalogue {
-    padding: 48px 0 80px;
-  }
-  .catalogue .grid {
+  /* Résultats */
+  section.results { padding: 32px 0 60px; }
+  .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
   .card {
     background: #fff;
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    transition: all 0.25s ease;
+    border-radius: 14px;
+    padding: 22px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    transition: all 0.25s ease;
     position: relative;
   }
   .card:hover {
-    box-shadow: 0 20px 40px -12px rgba(37,99,235,0.15);
-    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -12px rgba(37,99,235,0.15);
+    transform: translateY(-3px);
     border-color: var(--blue-light);
   }
-  .card .count {
-    display: inline-block;
-    background: var(--blue-pale);
-    color: var(--blue-dark);
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 0.78em;
+  .card .tier {
+    font-size: 0.75em;
     font-weight: 700;
-    margin-bottom: 16px;
-    letter-spacing: 0.02em;
+    color: var(--blue-dark);
+    background: var(--blue-pale);
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card .ai-flag {
+    background: #fff;
+    color: var(--blue);
+    font-size: 0.85em;
+    border: 1px solid var(--blue-light);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
   }
   .card h3 {
-    font-size: 1.25em;
+    font-size: 1em;
     font-weight: 700;
-    margin-bottom: 10px;
+    line-height: 1.35;
     color: var(--ink);
   }
-  .card p {
+  .card .desc {
     color: var(--gray);
-    font-size: 0.95em;
-    margin-bottom: 20px;
-    flex-grow: 1;
+    font-size: 0.88em;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
   .card .tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 20px;
+    gap: 5px;
+    margin-top: 2px;
   }
-  .card .tags span {
+  .card .tag {
     font-size: 0.75em;
-    background: var(--gray-light);
     color: var(--gray);
-    padding: 3px 10px;
-    border-radius: 6px;
+    background: var(--gray-light);
+    border-radius: 5px;
+    padding: 2px 8px;
     font-weight: 500;
   }
-  .card .footer {
+  .card .foot {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
     margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
   }
   .card .price {
-    font-size: 1.5em;
+    font-size: 1.25em;
     font-weight: 800;
     color: var(--blue);
     letter-spacing: -0.02em;
   }
-  .card .price.free {
-    color: var(--gray);
-    font-size: 1em;
-    font-weight: 600;
-  }
-  .card .buy {
-    display: inline-block;
+  .card .buy-btn {
     background: var(--blue);
     color: #fff;
-    padding: 10px 22px;
-    border-radius: 10px;
-    text-decoration: none;
+    font-size: 0.85em;
     font-weight: 600;
-    font-size: 0.9em;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
     transition: all 0.2s;
-    white-space: nowrap;
+    font-family: inherit;
   }
-  .card .buy:hover {
+  .card .buy-btn:hover {
     background: var(--blue-dark);
     transform: translateY(-1px);
-    box-shadow: 0 8px 16px -4px rgba(37,99,235,0.4);
+    box-shadow: 0 6px 12px -3px rgba(37,99,235,0.4);
   }
 
   /* Empty state */
   .empty {
-    text-align: center;
     padding: 80px 20px;
+    text-align: center;
     color: var(--gray);
+    font-size: 1em;
   }
-  .empty h3 {
-    font-size: 1.25em;
-    color: var(--ink);
-    margin-bottom: 8px;
+  .empty .mono {
+    color: #94a3b8;
+    font-size: 0.9em;
+    display: block;
+    margin-top: 8px;
   }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 32px 0 8px;
+  }
+  .pagination button {
+    min-width: 38px;
+    height: 38px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--gray);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .pagination button:hover:not(:disabled) {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .pagination button.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
+  .pagination button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .pagination .gap { color: #94a3b8; padding: 0 4px; }
 
   /* Footer */
   footer {
@@ -291,13 +393,17 @@
   }
 
   /* Responsive */
-  @media (max-width: 768px) {
-    .catalogue-hero h1 { font-size: 2.1em; }
-    .filters { position: static; }
-    .filters .wrap { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .filter-group { width: 100%; }
-    select { width: 100%; }
-    nav a { margin-left: 16px; font-size: 0.9em; }
+  @media (max-width: 980px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .catalogue-hero h1 { font-size: 2em; }
+    .toolbar { position: static; }
+    .search-row { flex-direction: column; }
+    select#sort { padding: 10px 14px; }
+    nav a { margin-left: 14px; font-size: 0.85em; }
+    .clear-btn { margin-left: 0; }
   }
 </style>
 </head>
@@ -307,6 +413,7 @@
   <div class="wrap">
     <a href="index.html" class="logo">AOWorkflows</a>
     <nav>
+      <a href="index.html">Accueil</a>
       <a href="catalogue.html" class="active">Catalogue</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -316,140 +423,53 @@
 <section class="catalogue-hero">
   <div class="wrap">
     <h1>Catalogue</h1>
-    <p>1958 workflows n8n répartis en 7 bundles thématiques. Filtre par cas d'usage ou par budget, puis choisis ton pack.</p>
+    <p>Parcourez les 1958 workflows n8n disponibles à l'unité. Filtrez par licence ou par intégration pour trouver le bon fichier .json.</p>
   </div>
 </section>
 
-<section class="filters">
+<div class="toolbar">
   <div class="wrap">
-    <div class="filter-group">
-      <label>Filtrer :</label>
-      <span class="chip active" data-filter="all">Tous</span>
-      <span class="chip" data-filter="ai">AI & LLM</span>
-      <span class="chip" data-filter="google">Google</span>
-      <span class="chip" data-filter="cron">Planification</span>
-      <span class="chip" data-filter="webhook">Webhook</span>
-      <span class="chip" data-filter="social">Social</span>
-      <span class="chip" data-filter="telegram">Telegram</span>
-    </div>
-    <div class="filter-group">
-      <label for="sort">Trier :</label>
+    <div class="search-row">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search" type="text" placeholder="Rechercher un workflow (ex: Telegram, agent IA, Sheets…)">
+      </div>
       <select id="sort">
-        <option value="popular">Popularité</option>
+        <option value="relevance">Pertinence</option>
         <option value="price-asc">Prix croissant</option>
         <option value="price-desc">Prix décroissant</option>
-        <option value="count-desc">Nombre de workflows</option>
+        <option value="name-asc">Nom (A–Z)</option>
       </select>
     </div>
+
+    <div class="filters">
+      <div class="filter-group" id="tierFilters">
+        <span class="filter-label">Licence</span>
+      </div>
+      <div class="filter-group" id="aiFilters">
+        <span class="filter-label">Type</span>
+      </div>
+      <div class="filter-group" id="integFilters">
+        <span class="filter-label">Intégration</span>
+      </div>
+      <button class="clear-btn" id="clearBtn">Réinitialiser les filtres</button>
+    </div>
+
+    <div class="meta-row">
+      <span id="resultCount"></span>
+      <span id="pageIndicator"></span>
+    </div>
   </div>
-</section>
+</div>
 
-<section class="catalogue">
+<section class="results">
   <div class="wrap">
-    <div class="grid" id="grid">
-
-      <div class="card" data-category="ai" data-count="725" data-price="149">
-        <span class="count">725 workflows</span>
-        <h3>AI Agents & Chatbots</h3>
-        <p>Agents autonomes, chaînes LLM, mémoire conversationnelle, RAG. Construis des assistants intelligents sans écrire une ligne de code.</p>
-        <div class="tags">
-          <span>OpenAI</span>
-          <span>Claude</span>
-          <span>LangChain</span>
-          <span>RAG</span>
-        </div>
-        <div class="footer">
-          <div class="price">149 $</div>
-          <a href="download.html?bundle=ai-agents" class="buy">Acheter</a>
-        </div>
-      </div>
-
-      <div class="card" data-category="google" data-count="429" data-price="99">
-        <span class="count">429 workflows</span>
-        <h3>Google Workspace</h3>
-        <p>Sheets, Drive, Calendar et Gmail interconnectés. Automatise la synchronisation de tes données Google sans effort.</p>
-        <div class="tags">
-          <span>Sheets</span>
-          <span>Drive</span>
-          <span>Gmail</span>
-          <span>Calendar</span>
-        </div>
-        <div class="footer">
-          <div class="price">99 $</div>
-          <a href="download.html?bundle=google-workspace" class="buy">Acheter</a>
-        </div>
-      </div>
-
-      <div class="card" data-category="cron" data-count="295" data-price="79">
-        <span class="count">295 workflows</span>
-        <h3>Scheduled & Cron Jobs</h3>
-        <p>Tâches planifiées et automatisations récurrentes. Déclenche tes workflows à intervalles précis, sans serveur dédié.</p>
-        <div class="tags">
-          <span>Cron</span>
-          <span>Schedule</span>
-          <span>Interval</span>
-          <span>Batch</span>
-        </div>
-        <div class="footer">
-          <div class="price">79 $</div>
-          <a href="download.html?bundle=scheduled" class="buy">Acheter</a>
-        </div>
-      </div>
-
-      <div class="card" data-category="webhook" data-count="189" data-price="89">
-        <span class="count">189 workflows</span>
-        <h3>Webhook & API</h3>
-        <p>Intégrations événementielles et API tierces. Reçois des événements de n'importe quel service et déclenche tes automatisations.</p>
-        <div class="tags">
-          <span>Webhook</span>
-          <span>REST</span>
-          <span>GraphQL</span>
-          <span>Auth</span>
-        </div>
-        <div class="footer">
-          <div class="price">89 $</div>
-          <a href="download.html?bundle=webhook-api" class="buy">Acheter</a>
-        </div>
-      </div>
-
-      <div class="card" data-category="social" data-count="135" data-price="69">
-        <span class="count">135 workflows</span>
-        <h3>Social Media Automation</h3>
-        <p>Twitter/X, Discord, Slack. Poste, réponds et surveille tes réseaux sociaux automatiquement.</p>
-        <div class="tags">
-          <span>Twitter/X</span>
-          <span>Discord</span>
-          <span>Slack</span>
-          <span>Scheduling</span>
-        </div>
-        <div class="footer">
-          <div class="price">69 $</div>
-          <a href="download.html?bundle=social" class="buy">Acheter</a>
-        </div>
-      </div>
-
-      <div class="card" data-category="telegram" data-count="90" data-price="59">
-        <span class="count">90 workflows</span>
-        <h3>Telegram Automation</h3>
-        <p>Bots, alertes et interfaces Telegram. Crée des bots interactifs et des systèmes d'alerte en temps réel.</p>
-        <div class="tags">
-          <span>Bots</span>
-          <span>Alerts</span>
-          <span>Commands</span>
-          <span>Broadcast</span>
-        </div>
-        <div class="footer">
-          <div class="price">59 $</div>
-          <a href="download.html?bundle=telegram" class="buy">Acheter</a>
-        </div>
-      </div>
-
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="emptyState" style="display:none;">
+      Aucun workflow ne correspond à ces filtres.
+      <span class="mono">Essaie d'élargir ta recherche ou de réinitialiser les filtres.</span>
     </div>
-
-    <div class="empty" id="empty" style="display:none;">
-      <h3>Aucun résultat</h3>
-      <p>Essaie un autre filtre.</p>
-    </div>
+    <div class="pagination" id="pagination"></div>
   </div>
 </section>
 
@@ -468,52 +488,190 @@
 </footer>
 
 <script>
-  const grid = document.getElementById('grid');
-  const cards = Array.from(grid.querySelectorAll('.card'));
-  const emptyState = document.getElementById('empty');
-  const sortSelect = document.getElementById('sort');
-  const chips = document.querySelectorAll('.chip');
+/* ---------------------------------------------------------------
+   Données réelles : chargées depuis catalog_data.json (1958 workflows)
+   Champs compacts : f=fichier, n=nom, t=tier, p=prix, i=intégrations, ai=bool, d=description
+--------------------------------------------------------------- */
+let CATALOG = [];
 
-  let currentFilter = 'all';
-  let currentSort = 'popular';
+const state = {
+  query: "",
+  tier: null,
+  aiOnly: false,
+  integration: null,
+  sort: "relevance",
+  page: 1,
+  perPage: 30,
+};
 
-  function applyFilter() {
-    let visible = 0;
-    cards.forEach(card => {
-      const cat = card.dataset.category;
-      const show = (currentFilter === 'all' || cat === currentFilter);
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
-    });
-    emptyState.style.display = visible === 0 ? 'block' : 'none';
+fetch('catalog_data.json')
+  .then(r => r.json())
+  .then(data => {
+    CATALOG = data;
+    initFilters();
+    render();
+  })
+  .catch(() => {
+    document.getElementById('grid').innerHTML = '';
+    const empty = document.getElementById('emptyState');
+    empty.style.display = 'block';
+    empty.innerHTML = 'Impossible de charger le catalogue.<span class="mono">Vérifie que catalog_data.json est bien dans le même dossier que cette page.</span>';
+  });
+
+function initFilters(){
+  const allTiers = ["Basic", "Standard", "Premium"];
+  renderChipGroup("tierFilters", allTiers, val => {
+    state.tier = state.tier === val ? null : val;
+    state.page = 1;
+    render();
+  });
+
+  renderChipGroup("aiFilters", ["🤖 Avec IA"], () => {
+    state.aiOnly = !state.aiOnly;
+    state.page = 1;
+    render();
+  });
+
+  const allIntegrations = [...new Set(CATALOG.flatMap(i => i.i || []))].sort().slice(0, 40);
+  renderChipGroup("integFilters", allIntegrations, val => {
+    state.integration = state.integration === val ? null : val;
+    state.page = 1;
+    render();
+  });
+}
+
+function renderChipGroup(containerId, values, onClick){
+  const container = document.getElementById(containerId);
+  values.forEach(val => {
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.textContent = val;
+    chip.dataset.val = val;
+    chip.addEventListener("click", () => { onClick(val); syncChipStates(); });
+    container.appendChild(chip);
+  });
+}
+
+function syncChipStates(){
+  document.querySelectorAll("#tierFilters .chip").forEach(c => c.classList.toggle("active", c.dataset.val === state.tier));
+  document.querySelectorAll("#aiFilters .chip").forEach(c => c.classList.toggle("active", state.aiOnly));
+  document.querySelectorAll("#integFilters .chip").forEach(c => c.classList.toggle("active", c.dataset.val === state.integration));
+}
+
+function getFiltered(){
+  const q = state.query.trim().toLowerCase();
+  let items = CATALOG.filter(item => {
+    if (state.tier && item.t !== state.tier) return false;
+    if (state.aiOnly && !item.ai) return false;
+    if (state.integration && !(item.i || []).includes(state.integration)) return false;
+    if (q){
+      const hay = (item.n + " " + (item.i || []).join(" ") + " " + (item.d || "")).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  switch (state.sort){
+    case "price-asc":  items = items.slice().sort((a,b) => a.p - b.p); break;
+    case "price-desc": items = items.slice().sort((a,b) => b.p - a.p); break;
+    case "name-asc":   items = items.slice().sort((a,b) => a.n.localeCompare(b.n)); break;
   }
+  return items;
+}
 
-  function applySort() {
-    const sorted = [...cards].sort((a, b) => {
-      if (currentSort === 'price-asc') return Number(a.dataset.price) - Number(b.dataset.price);
-      if (currentSort === 'price-desc') return Number(b.dataset.price) - Number(a.dataset.price);
-      if (currentSort === 'count-desc') return Number(b.dataset.count) - Number(a.dataset.count);
-      // popular = ordre original
-      return 0;
-    });
-    sorted.forEach(card => grid.appendChild(card));
-  }
+function render(){
+  syncChipStates();
+  const filtered = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / state.perPage));
+  state.page = Math.min(state.page, totalPages);
+  const start = (state.page - 1) * state.perPage;
+  const pageItems = filtered.slice(start, start + state.perPage);
 
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      currentFilter = chip.dataset.filter;
-      applyFilter();
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("emptyState");
+  grid.innerHTML = "";
+  empty.style.display = filtered.length ? "none" : "block";
+
+  pageItems.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="tier">${item.t}${item.ai ? '<span class="ai-flag">🤖 IA</span>' : ''}</div>
+      <h3>${escapeHtml(item.n)}</h3>
+      ${item.d ? `<div class="desc">${escapeHtml(item.d)}</div>` : ''}
+      <div class="tags">${(item.i || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+      <div class="foot">
+        <div class="price">${item.p} $</div>
+        <button class="buy-btn" data-file="${escapeHtml(item.f)}">Acheter</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.buy-btn').forEach(el => {
+    el.addEventListener('click', () => {
+      // Paddle sera branché ici plus tard
+      alert('Checkout en cours de configuration pour : ' + el.dataset.file);
     });
   });
 
-  sortSelect.addEventListener('change', () => {
-    currentSort = sortSelect.value;
-    applySort();
+  document.getElementById("resultCount").textContent =
+    filtered.length ? `${filtered.length.toLocaleString('fr-FR')} workflow${filtered.length > 1 ? "s" : ""}` : "";
+  document.getElementById("pageIndicator").textContent =
+    filtered.length ? `Page ${state.page} / ${totalPages}` : "";
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages){
+  const el = document.getElementById("pagination");
+  el.innerHTML = "";
+  if (totalPages <= 1) return;
+
+  const addBtn = (label, page, opts = {}) => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    if (opts.active) btn.classList.add("active");
+    if (opts.disabled) btn.disabled = true;
+    btn.addEventListener("click", () => { state.page = page; render(); window.scrollTo({top:0, behavior:"smooth"}); });
+    el.appendChild(btn);
+  };
+  const addGap = () => { const s = document.createElement("span"); s.className = "gap"; s.textContent = "…"; el.appendChild(s); };
+
+  addBtn("‹", Math.max(1, state.page - 1), { disabled: state.page === 1 });
+
+  const pages = new Set([1, totalPages, state.page, state.page - 1, state.page + 1]);
+  let prev = 0;
+  [...pages].filter(p => p >= 1 && p <= totalPages).sort((a,b)=>a-b).forEach(p => {
+    if (prev && p - prev > 1) addGap();
+    addBtn(String(p), p, { active: p === state.page });
+    prev = p;
   });
 
-  applyFilter();
+  addBtn("›", Math.min(totalPages, state.page + 1), { disabled: state.page === totalPages });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  state.query = e.target.value;
+  state.page = 1;
+  render();
+});
+document.getElementById("sort").addEventListener("change", e => {
+  state.sort = e.target.value;
+  render();
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  state.query = ""; state.tier = null; state.aiOnly = false; state.integration = null;
+  state.sort = "relevance"; state.page = 1;
+  document.getElementById("search").value = "";
+  document.getElementById("sort").value = "relevance";
+  render();
+});
 </script>
 
 </body>
