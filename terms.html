@@ -1,85 +1,182 @@
 <!DOCTYPE html>
 <html lang="fr">
-<h<!-- ==================== terms.html ==================== -->
-<title>Conditions générales de vente | AO Workflows</title>
-<meta name="description" content="Conditions générales de vente d'AO Workflows : licences Basic, Standard, Premium et Agence pour les workflows n8n vendus via Paddle.">
-<link rel="canonical" href="https://aoworkflows.com/terms.html">
-<meta name="robots" content="index, follow">
-
-<!-- ==================== privacy.html ==================== -->
-<title>Politique de confidentialité | AO Workflows</title>
-<meta name="description" content="Comment AO Workflows collecte, utilise et protège vos données personnelles lors de l'achat de workflows n8n via Paddle.">
-<link rel="canonical" href="https://aoworkflows.com/privacy.html">
-<meta name="robots" content="index, follow">
-
-ead>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conditions générales — AO Workflows</title>
+<title>Conditions Générales — AOWorkflows</title>
+<meta name="description" content="Conditions générales de vente des workflows n8n AOWorkflows.">
 <style>
-  :root{--bg:#14171C;--panel:#1B1F26;--line:#2A2F38;--text:#E7E9EC;--muted:#9199A6;--accent:#F2A93B;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.7;}
-  h1,h2,.mono{font-family:'IBM Plex Mono',Consolas,monospace;}
-  a{color:var(--accent);}
-  .wrap{max-width:720px;margin:0 auto;padding:0 28px;}
-  header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:48px;}
-  header .wrap{display:flex;align-items:center;justify-content:space-between;}
-  .brand{font-family:'IBM Plex Mono',monospace;font-size:18px;}
-  .brand span{color:var(--accent);}
-  nav a{color:var(--muted);margin-left:24px;font-size:14px;text-decoration:none;}
-  main{padding-bottom:80px;}
-  h1{font-size:30px;font-weight:500;margin-bottom:8px;}
-  .updated{color:var(--muted);font-size:13px;margin-bottom:40px;}
-  h2{font-size:17px;font-weight:600;margin:32px 0 10px;}
-  p,li{color:#C7CBD1;font-size:15px;}
-  ul{margin-left:20px;margin-top:8px;}
-  li{margin-bottom:6px;}
-  footer{border-top:1px solid var(--line);padding:24px 0;color:#5B6370;font-size:12.5px;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --blue-light: #dbeafe;
+    --blue-pale: #eff6ff;
+    --ink: #0f172a;
+    --gray: #64748b;
+    --border: #e2e8f0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  header {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo {
+    font-weight: 800;
+    font-size: 1.2em;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: var(--blue);
+    border-radius: 6px;
+  }
+  nav a {
+    margin-left: 28px;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--blue); }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 20px 100px;
+  }
+  main h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .updated {
+    color: var(--gray);
+    font-style: italic;
+    margin-bottom: 48px;
+    font-size: 0.95em;
+  }
+  main h2 {
+    font-size: 1.35em;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    color: var(--ink);
+    padding-left: 14px;
+    border-left: 4px solid var(--blue);
+  }
+  main p { margin-bottom: 16px; color: #334155; }
+  main ul { margin: 16px 0 16px 24px; color: #334155; }
+  main li { margin-bottom: 8px; }
+  main a { color: var(--blue); text-decoration: none; font-weight: 500; }
+  main a:hover { text-decoration: underline; }
+  .highlight {
+    background: var(--blue-pale);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 24px 0;
+    border-left: 4px solid var(--blue);
+  }
+
+  footer {
+    background: var(--ink);
+    color: #94a3b8;
+    padding: 56px 0 32px;
+    font-size: 0.9em;
+  }
+  footer .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+  footer .legal a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  footer .legal a:hover { color: #60a5fa; }
+  footer .copy {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85em;
+    padding-top: 28px;
+    border-top: 1px solid #1e293b;
+  }
+
+  @media (max-width: 640px) {
+    main { padding: 50px 20px 60px; }
+    main h1 { font-size: 1.9em; }
+    main h2 { font-size: 1.15em; }
+    nav a { margin-left: 16px; font-size: 0.9em; }
+  }
 </style>
 </head>
 <body>
+
 <header>
   <div class="wrap">
-    <div class="brand">AO<span>Workflows</span></div>
-    <nav><a href="index.html">Accueil</a></nav>
+    <a href="index.html" class="logo">AOWorkflows</a>
+    <nav>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </div>
 </header>
-<main class="wrap">
-  <h1>Conditions générales de vente</h1>
-  <p class="updated">Dernière mise à jour : 3 septembre 2026</p>
 
-  <p>Les présentes conditions générales régissent l'achat et l'utilisation des produits numériques (workflows d'automatisation au format .json et documentation associée) vendus par AO Workflows via notre revendeur agréé Paddle.com. En achetant un produit, vous acceptez les présentes conditions.</p>
+<main>
+  <h1>Conditions Générales de Vente</h1>
+  <p class="updated">Dernière mise à jour : 17 septembre 2026</p>
 
-  <h2>1. Nature des produits</h2>
-  <p>Les produits vendus sont des fichiers numériques de configuration destinés à être importés dans la plateforme d'automatisation n8n (self-hosted ou n8n Cloud). Aucune garantie de compatibilité n'est fournie pour des versions de n8n non testées explicitement dans la fiche produit.</p>
+  <h2>1. Identité du vendeur</h2>
+  <p>Le site AOWorkflows est exploité par <strong>Abdellatif Ouakhroun</strong>, entrepreneur individuel établi à Db Amal Imm 04 NR 09 H H Casa, 20230 Casablanca, Maroc.</p>
+  <p>Contact : <a href="mailto:aotechadvisor@gmail.com">aotechadvisor@gmail.com</a> — Téléphone : +212 614-224588</p>
 
-  <h2>2. Licence d'utilisation</h2>
-  <p>Sauf mention contraire sur la fiche produit :</p>
-  <ul>
-    <li><strong>Licence Basic / Standard / Premium</strong> — usage personnel ou au sein d'une seule organisation. Modification autorisée pour vos propres besoins.</li>
-    <li><strong>Licence Agence</strong> — autorise le déploiement des workflows pour le compte de clients tiers, sans revente du fichier source lui-même.</li>
-    <li>La revente, redistribution ou republication des fichiers source (y compris sur d'autres marketplaces) est interdite sans accord écrit préalable.</li>
-  </ul>
+  <h2>2. Produits vendus</h2>
+  <p>AOWorkflows vend des <strong>fichiers de workflows n8n au format .json</strong>, livrés par téléchargement immédiat après paiement. Chaque pack contient des workflows préconfigurés destinés à être importés dans l'instance n8n de l'acheteur.</p>
 
-  <h2>3. Livraison</h2>
-  <p>Les fichiers sont livrés par téléchargement immédiat après confirmation du paiement par Paddle. Aucune expédition physique n'est effectuée.</p>
+  <h2>3. Prix et paiement</h2>
+  <p>Les prix sont affichés en dollars américains (USD) sur le site. Le paiement est traité par notre revendeur agréé <strong>Paddle.com Market Ltd</strong>, qui agit en qualité de <em>Merchant of Record</em>. Paddle est le vendeur légal des produits et gère la facturation, la TVA et les remboursements.</p>
 
-  <h2>4. Paiement</h2>
-  <p>Les transactions sont traitées par Paddle.com, qui agit en tant que revendeur agréé (Merchant of Record) et facture le client final. Paddle est responsable de la collecte des taxes applicables (TVA, taxes de vente).</p>
+  <h2>4. Livraison</h2>
+  <p>La livraison est <strong>instantanée et électronique</strong>. Après confirmation du paiement par Paddle, un lien de téléchargement est envoyé automatiquement par email à l'adresse fournie lors de l'achat. Aucun envoi physique n'a lieu.</p>
 
-  <h2>5. Remboursements</h2>
-  <p>Voir notre <a href="refund.html">politique de remboursement</a> détaillée.</p>
+  <h2>5. Droit de rétractation et remboursement</h2>
+  <div class="highlight">
+    L'acheteur dispose de <strong>30 jours</strong> à compter de la date d'achat pour demander un remboursement intégral, sans avoir à justifier sa décision. Voir notre page <a href="refund.html">Politique de remboursement</a>.
+  </div>
 
-  <h2>6. Support</h2>
-  <p>Le support couvre l'installation et l'import des workflows dans n8n. Il ne couvre pas la configuration de services tiers (clés API, comptes des intégrations utilisées par le workflow).</p>
+  <h2>6. Licence d'utilisation</h2>
+  <p>L'achat d'un workflow confère à l'acheteur une licence <strong>non exclusive, non transférable</strong>, l'autorisant à utiliser le fichier pour ses propres projets personnels ou professionnels. La revente, la redistribution ou la mise à disposition publique des fichiers est interdite.</p>
 
-  <h2>7. Limitation de responsabilité</h2>
-  <p>Les produits sont fournis "en l'état". AO Workflows ne pourra être tenu responsable des dommages indirects résultant de l'utilisation des workflows, y compris les coûts d'API tiers engagés par leur exécution.</p>
+  <h2>7. Responsabilité</h2>
+  <p>Les workflows sont fournis « en l'état ». AOWorkflows ne garantit pas qu'ils fonctionneront sans modification sur toutes les versions de n8n ou avec tous les services tiers. L'acheteur est responsable de la configuration de ses propres clés API et identifiants.</p>
 
-  <h2>8. Contact</h2>
-  <p>Pour toute question relative à ces conditions : <a href="mailto:contact@aoworkflows.com">contact@aoworkflows.com</a></p>
-</main>
-<footer><div class="wrap">© 2026 AO Workflows.</div></footer>
-</body>
-</html>
+  <h2>8. Droit applicable</h2>
+  <p>Les présentes conditions sont régies
