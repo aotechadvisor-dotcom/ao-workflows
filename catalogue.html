@@ -7,7 +7,7 @@
 <meta name="description" content="Catalogue complet des 1958 workflows n8n AOWorkflows. Filtrez par licence, intégration ou type d'IA.">
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script type="text/javascript">
-  Paddle.Initialize({ token: "YOUR_CLIENT_TOKEN_HERE" });
+  Paddle.Initialize({ token: "live_4395124b087360d70bdecb45656" });
 </script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -497,7 +497,7 @@
 
 <script>
 /* ---------------------------------------------------------------
-   Catalogue + Paddle
+   Catalogue + Paddle checkout
 --------------------------------------------------------------- */
 
 let CATALOG = [];
@@ -827,4 +827,52 @@ function renderPagination(totalPages){
   el.innerHTML = "";
   if (totalPages <= 1) return;
 
-  const addBtn = (
+  const addBtn = (label, page, opts = {}) => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    if (opts.active) btn.classList.add("active");
+    if (opts.disabled) btn.disabled = true;
+    btn.addEventListener("click", () => { state.page = page; render(); window.scrollTo({top:0, behavior:"smooth"}); });
+    el.appendChild(btn);
+  };
+  const addGap = () => { const s = document.createElement("span"); s.className = "gap"; s.textContent = "…"; el.appendChild(s); };
+
+  addBtn("‹", Math.max(1, state.page - 1), { disabled: state.page === 1 });
+
+  const pages = new Set([1, totalPages, state.page, state.page - 1, state.page + 1]);
+  let prev = 0;
+  [...pages].filter(p => p >= 1 && p <= totalPages).sort((a,b)=>a-b).forEach(p => {
+    if (prev && p - prev > 1) addGap();
+    addBtn(String(p), p, { active: p === state.page });
+    prev = p;
+  });
+
+  addBtn("›", Math.min(totalPages, state.page + 1), { disabled: state.page === totalPages });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  state.query = e.target.value;
+  state.page = 1;
+  render();
+});
+document.getElementById("sort").addEventListener("change", e => {
+  state.sort = e.target.value;
+  render();
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  state.query = ""; state.tier = null; state.aiOnly = false; state.integration = null;
+  state.sort = "relevance"; state.page = 1;
+  document.getElementById("search").value = "";
+  document.getElementById("sort").value = "relevance";
+  render();
+});
+</script>
+
+</body>
+</html>
