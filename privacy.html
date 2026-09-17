@@ -1,74 +1,203 @@
 <!DOCTYPE html>
 <html lang="fr">
-<he<!-- ==================== privacy.html ==================== -->
-<title>Politique de confidentialité | AO Workflows</title>
-<meta name="description" content="Comment AO Workflows collecte, utilise et protège vos données personnelles lors de l'achat de workflows n8n via Paddle.">
-<link rel="canonical" href="https://aoworkflows.com/privacy.html">
-<meta name="robots" content="index, follow">
-ad>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Politique de confidentialité — AO Workflows</title>
+<title>Politique de Confidentialité — AOWorkflows</title>
+<meta name="description" content="Politique de confidentialité d'AOWorkflows. Comment nous collectons, utilisons et protégeons vos données.">
 <style>
-  :root{--bg:#14171C;--panel:#1B1F26;--line:#2A2F38;--text:#E7E9EC;--muted:#9199A6;--accent:#F2A93B;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.7;}
-  h1,h2{font-family:'IBM Plex Mono',Consolas,monospace;}
-  a{color:var(--accent);}
-  .wrap{max-width:720px;margin:0 auto;padding:0 28px;}
-  header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:48px;}
-  header .wrap{display:flex;align-items:center;justify-content:space-between;}
-  .brand{font-family:'IBM Plex Mono',monospace;font-size:18px;}
-  .brand span{color:var(--accent);}
-  nav a{color:var(--muted);margin-left:24px;font-size:14px;text-decoration:none;}
-  main{padding-bottom:80px;}
-  h1{font-size:30px;font-weight:500;margin-bottom:8px;}
-  .updated{color:var(--muted);font-size:13px;margin-bottom:40px;}
-  h2{font-size:17px;font-weight:600;margin:32px 0 10px;}
-  p,li{color:#C7CBD1;font-size:15px;}
-  ul{margin-left:20px;margin-top:8px;}
-  li{margin-bottom:6px;}
-  footer{border-top:1px solid var(--line);padding:24px 0;color:#5B6370;font-size:12.5px;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --blue-light: #dbeafe;
+    --blue-pale: #eff6ff;
+    --ink: #0f172a;
+    --gray: #64748b;
+    --border: #e2e8f0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  header {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo {
+    font-weight: 800;
+    font-size: 1.2em;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: var(--blue);
+    border-radius: 6px;
+  }
+  nav a {
+    margin-left: 28px;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--blue); }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 20px 100px;
+  }
+  main h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .updated {
+    color: var(--gray);
+    font-style: italic;
+    margin-bottom: 48px;
+    font-size: 0.95em;
+  }
+  main h2 {
+    font-size: 1.35em;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    color: var(--ink);
+    padding-left: 14px;
+    border-left: 4px solid var(--blue);
+  }
+  main p { margin-bottom: 16px; color: #334155; }
+  main ul { margin: 16px 0 16px 24px; color: #334155; }
+  main li { margin-bottom: 8px; }
+  main a { color: var(--blue); text-decoration: none; font-weight: 500; }
+  main a:hover { text-decoration: underline; }
+
+  footer {
+    background: var(--ink);
+    color: #94a3b8;
+    padding: 56px 0 32px;
+    font-size: 0.9em;
+  }
+  footer .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+  footer .legal a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  footer .legal a:hover { color: #60a5fa; }
+  footer .copy {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85em;
+    padding-top: 28px;
+    border-top: 1px solid #1e293b;
+  }
+
+  @media (max-width: 640px) {
+    main { padding: 50px 20px 60px; }
+    main h1 { font-size: 1.9em; }
+    main h2 { font-size: 1.15em; }
+    nav a { margin-left: 16px; font-size: 0.9em; }
+  }
 </style>
 </head>
 <body>
+
 <header>
   <div class="wrap">
-    <div class="brand">AO<span>Workflows</span></div>
-    <nav><a href="index.html">Accueil</a></nav>
+    <a href="index.html" class="logo">AOWorkflows</a>
+    <nav>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </div>
 </header>
-<main class="wrap">
-  <h1>Politique de confidentialité</h1>
-  <p class="updated">Dernière mise à jour : 3 septembre 2026</p>
 
-  <p>Cette politique explique quelles données sont collectées lorsque vous achetez ou consultez les produits AO Workflows, et comment elles sont utilisées.</p>
+<main>
+  <h1>Politique de Confidentialité</h1>
+  <p class="updated">Dernière mise à jour : 17 septembre 2026</p>
 
-  <h2>1. Données collectées</h2>
+  <h2>1. Responsable du traitement</h2>
+  <p>Abdellatif Ouakhroun, Db Amal Imm 04 NR 09 H H Casa, 20230 Casablanca, Maroc.<br>
+  Contact : <a href="mailto:aotechadvisor@gmail.com">aotechadvisor@gmail.com</a> — Téléphone : +212 614-224588</p>
+
+  <h2>2. Données collectées</h2>
+  <p>Lors de votre visite sur AOWorkflows ou d'un achat, nous pouvons collecter :</p>
   <ul>
-    <li><strong>Données de paiement</strong> — traitées intégralement par Paddle.com (nom, email, informations de carte ou de paiement). Nous n'avons jamais accès aux détails complets de votre moyen de paiement.</li>
-    <li><strong>Email de contact</strong> — utilisé pour la livraison du produit, le support, et l'envoi d'informations liées à votre achat.</li>
-    <li><strong>Données techniques</strong> — statistiques de visite anonymisées (pages consultées, provenance) à des fins d'amélioration du site.</li>
+    <li>Votre adresse email (fournie lors de l'achat ou du téléchargement)</li>
+    <li>Votre adresse IP et données de navigation (via cookies analytiques anonymes)</li>
+    <li>Les informations de paiement, traitées directement par Paddle — nous ne stockons jamais vos données bancaires</li>
   </ul>
 
-  <h2>2. Utilisation des données</h2>
-  <p>Vos données sont utilisées uniquement pour : traiter votre commande, vous livrer le produit, assurer le support technique, et vous informer d'éventuelles mises à jour des workflows achetés. Elles ne sont jamais vendues à des tiers.</p>
+  <h2>3. Utilisation des données</h2>
+  <p>Vos données sont utilisées uniquement pour :</p>
+  <ul>
+    <li>Vous envoyer le lien de téléchargement de votre achat</li>
+    <li>Répondre à vos demandes de support</li>
+    <li>Respecter nos obligations légales et fiscales</li>
+  </ul>
 
-  <h2>3. Partage avec des tiers</h2>
-  <p>Vos données de paiement sont partagées avec Paddle.com dans le cadre du traitement de la transaction, conformément à leur propre politique de confidentialité. Aucune autre donnée n'est partagée avec des tiers hors obligation légale.</p>
+  <h2>4. Partage des données</h2>
+  <p>Nous partageons vos données uniquement avec :</p>
+  <ul>
+    <li><strong>Paddle.com Market Ltd</strong> — notre revendeur, qui traite les paiements et gère la conformité fiscale</li>
+    <li><strong>Notre hébergeur</strong> (GitHub Pages) — pour l'affichage du site</li>
+  </ul>
+  <p>Aucune donnée n'est vendue à des tiers.</p>
 
-  <h2>4. Conservation des données</h2>
-  <p>Les données liées à votre achat sont conservées le temps nécessaire à la gestion du support et aux obligations comptables légales.</p>
+  <h2>5. Cookies</h2>
+  <p>Le site utilise uniquement des cookies techniques nécessaires à son fonctionnement. Aucun cookie publicitaire n'est utilisé sans consentement explicite.</p>
 
-  <h2>5. Vos droits</h2>
-  <p>Vous pouvez demander l'accès, la correction ou la suppression de vos données personnelles à tout moment en nous contactant.</p>
+  <h2>6. Vos droits</h2>
+  <p>Conformément au RGPD et à la loi marocaine 09-08, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, écrivez à <a href="mailto:aotechadvisor@gmail.com">aotechadvisor@gmail.com</a>.</p>
 
-  <h2>6. Cookies</h2>
-  <p>Le site peut utiliser des cookies techniques nécessaires à son fonctionnement et, le cas échéant, des cookies analytiques anonymisés.</p>
-
-  <h2>7. Contact</h2>
-  <p>Pour toute question relative à cette politique : <a href="mailto:contact@aoworkflows.com">contact@aoworkflows.com</a></p>
+  <h2>7. Sécurité</h2>
+  <p>Nous mettons en œuvre des mesures techniques appropriées pour protéger vos données. Les paiements sont sécurisés et traités par Paddle, certifié PCI-DSS niveau 1.</p>
 </main>
-<footer><div class="wrap">© 2026 AO Workflows.</div></footer>
+
+<footer>
+  <div class="wrap">
+    <div class="legal">
+      <a href="terms.html">Conditions générales</a>
+      <a href="privacy.html">Politique de confidentialité</a>
+      <a href="refund.html">Politique de remboursement</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="copy">
+      © 2026 AO Workflows — Abdellatif Ouakhroun, Casablanca, Maroc
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
