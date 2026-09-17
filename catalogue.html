@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catalogue — AOWorkflows</title>
 <meta name="description" content="Catalogue complet des 1958 workflows n8n AOWorkflows. Filtrez par licence, intégration ou type d'IA.">
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script type="text/javascript">
+  Paddle.Initialize({ token: "YOUR_CLIENT_TOKEN_HERE" });
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -493,10 +497,7 @@
 
 <script>
 /* ---------------------------------------------------------------
-   Catalogue dynamique avec filtres lisibles
-   - Charge catalog_data.json (1958 workflows)
-   - Affiche 15 intégrations principales + bouton "Voir plus"
-   - Traduit les noms techniques en noms lisibles
+   Catalogue + Paddle
 --------------------------------------------------------------- */
 
 let CATALOG = [];
@@ -512,9 +513,17 @@ const state = {
   showAllIntegrations: false,
 };
 
-// Mapping des noms techniques → noms lisibles
+const PRICE_IDS = {
+  "AI Agents & Chatbots":       "pri_01m1t13wzc2mr996x8hvz28na0",
+  "Google Workspace":           "pri_01m1t1bayzghvn4s620a4haxdn",
+  "Scheduled & Cron Jobs":      "pri_01m1t1ha40yxakg9pvn1wxyp9b",
+  "Webhook & API Integrations": "pri_01m1t1pt2vx6fme3p9a9v5yxnn",
+  "Social Media Automation":    "pri_01m1t1swx84q5ghegwd72grpex",
+  "Telegram Automation":        "pri_01m1t1x17cevjx82ysphfet716",
+  "CRM & Sales":                "pri_01m1t21d42wta2dja4nmdea277"
+};
+
 const NODE_LABELS = {
-  // LangChain / AI
   "@n8n/n8n-nodes-langchain.agent": "AI Agent",
   "@n8n/n8n-nodes-langchain.chainLlm": "LLM Chain",
   "@n8n/n8n-nodes-langchain.chainRetrievalQa": "RAG Chain",
@@ -573,7 +582,6 @@ const NODE_LABELS = {
   "@n8n/n8n-nodes-langchain.vectorStorePinecone": "Vector Store Pinecone",
   "@n8n/n8n-nodes-langchain.vectorStoreQdrant": "Vector Store Qdrant",
   "@n8n/n8n-nodes-langchain.vectorStoreSupabase": "Vector Store Supabase",
-  // Custom packages
   "@custom-js/n8n-nodes-pdf-toolkit.CompressPDF": "PDF Compress",
   "@custom-js/n8n-nodes-pdf-toolkit.ExtractPages": "PDF Extract Pages",
   "@custom-js/n8n-nodes-pdf-toolkit.PdfToPng": "PDF to PNG",
@@ -597,7 +605,6 @@ const NODE_LABELS = {
   "CUSTOM.klicktippTrigger": "KlickTipp Trigger",
 };
 
-// 15 intégrations principales affichées par défaut
 const PRIMARY_INTEGRATIONS = [
   "OpenAI", "Telegram", "Google Sheets", "Google Drive", "Gmail",
   "Discord", "Slack", "Webhook", "HTTP Request", "Notion",
@@ -606,12 +613,10 @@ const PRIMARY_INTEGRATIONS = [
 
 function prettifyNodeName(raw) {
   if (NODE_LABELS[raw]) return NODE_LABELS[raw];
-  // Nettoyage basique : enlever les packages techniques et mettre en forme
   let s = raw;
   s = s.replace(/^@[\w-]+\/n8n-nodes-[\w-]+\./, "");
   s = s.replace(/^n8n-nodes-[\w-]+\./, "");
   s = s.replace(/^CUSTOM\./, "");
-  // camelCase → mots séparés
   s = s.replace(/([a-z])([A-Z])/g, "$1 $2");
   s = s.replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2");
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -632,21 +637,18 @@ fetch('catalog_data.json')
   });
 
 function initFilters(){
-  // Licence
   renderChipGroup("tierFilters", ["Basic", "Standard", "Premium"], val => {
     state.tier = state.tier === val ? null : val;
     state.page = 1;
     render();
   });
 
-  // IA
   renderChipGroup("aiFilters", ["🤖 Avec IA"], () => {
     state.aiOnly = !state.aiOnly;
     state.page = 1;
     render();
   });
 
-  // Intégrations : on calcule le top par fréquence
   const counts = {};
   CATALOG.forEach(item => {
     (item.i || []).forEach(node => {
@@ -654,7 +656,6 @@ function initFilters(){
     });
   });
 
-  // Top 15 par fréquence
   const top15 = Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 15)
@@ -664,7 +665,6 @@ function initFilters(){
     return Object.keys(NODE_LABELS).find(k => NODE_LABELS[k] === name);
   }).filter(Boolean), ...top15])].slice(0, 15);
 
-  // Toutes les intégrations triées alphabétiquement par nom lisible
   const allNodes = Object.keys(counts).sort((a, b) => {
     return prettifyNodeName(a).localeCompare(prettifyNodeName(b));
   });
@@ -674,7 +674,6 @@ function initFilters(){
 
 function renderIntegrationChips(primary, all){
   const container = document.getElementById("integFilters");
-  // Supprime tout sauf le label
   [...container.querySelectorAll(".chip")].forEach(c => c.remove());
 
   const nodes = state.showAllIntegrations ? all : primary;
@@ -684,7 +683,7 @@ function renderIntegrationChips(primary, all){
     chip.className = "chip";
     chip.textContent = prettifyNodeName(node);
     chip.dataset.val = node;
-    chip.title = node; // tooltip = nom technique
+    chip.title = node;
     if (state.integration === node) chip.classList.add("active");
     chip.addEventListener("click", () => {
       state.integration = state.integration === node ? null : node;
@@ -694,7 +693,6 @@ function renderIntegrationChips(primary, all){
     container.appendChild(chip);
   });
 
-  // Bouton "Voir plus" / "Voir moins"
   const toggle = document.createElement("button");
   toggle.className = "chip toggle-more";
   toggle.textContent = state.showAllIntegrations
@@ -745,6 +743,26 @@ function getFiltered(){
   return items;
 }
 
+function getPriceIdForCard(card) {
+  const title = card.querySelector('h3').textContent.trim();
+  if (PRICE_IDS[title]) return PRICE_IDS[title];
+
+  if (/AI Agents|Chatbots/i.test(title))            return PRICE_IDS["AI Agents & Chatbots"];
+  if (/Google Workspace|Sheets|Drive|Calendar|Gmail/i.test(title)) return PRICE_IDS["Google Workspace"];
+  if (/Scheduled|Cron/i.test(title))                return PRICE_IDS["Scheduled & Cron Jobs"];
+  if (/Webhook|API/i.test(title))                   return PRICE_IDS["Webhook & API Integrations"];
+  if (/Social Media|Twitter|Discord|Slack/i.test(title)) return PRICE_IDS["Social Media Automation"];
+  if (/Telegram/i.test(title))                      return PRICE_IDS["Telegram Automation"];
+  if (/CRM|HubSpot|Salesforce|Pipedrive/i.test(title)) return PRICE_IDS["CRM & Sales"];
+
+  const tier = card.querySelector('.tier').textContent.toUpperCase();
+  if (tier.includes("BASIC"))    return PRICE_IDS["AI Agents & Chatbots"];
+  if (tier.includes("STANDARD")) return PRICE_IDS["Google Workspace"];
+  if (tier.includes("PREMIUM"))  return PRICE_IDS["Social Media Automation"];
+
+  return PRICE_IDS["AI Agents & Chatbots"];
+}
+
 function render(){
   syncChipStates();
   const filtered = getFiltered();
@@ -762,7 +780,6 @@ function render(){
     const card = document.createElement("div");
     card.className = "card";
 
-    // Traduire les tags d'intégration pour l'affichage
     const tagsHtml = (item.i || [])
       .slice(0, 3)
       .map(t => `<span class="tag">${escapeHtml(prettifyNodeName(t))}</span>`)
@@ -783,7 +800,17 @@ function render(){
 
   grid.querySelectorAll('.buy-btn').forEach(el => {
     el.addEventListener('click', () => {
-      alert('Checkout en cours de configuration pour : ' + el.dataset.file);
+      const card = el.closest('.card');
+      const priceId = getPriceIdForCard(card);
+
+      Paddle.Checkout.open({
+        items: [{ priceId: priceId, quantity: 1 }],
+        settings: {
+          displayMode: "overlay",
+          theme: "light",
+          locale: "fr"
+        }
+      });
     });
   });
 
@@ -800,52 +827,4 @@ function renderPagination(totalPages){
   el.innerHTML = "";
   if (totalPages <= 1) return;
 
-  const addBtn = (label, page, opts = {}) => {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    if (opts.active) btn.classList.add("active");
-    if (opts.disabled) btn.disabled = true;
-    btn.addEventListener("click", () => { state.page = page; render(); window.scrollTo({top:0, behavior:"smooth"}); });
-    el.appendChild(btn);
-  };
-  const addGap = () => { const s = document.createElement("span"); s.className = "gap"; s.textContent = "…"; el.appendChild(s); };
-
-  addBtn("‹", Math.max(1, state.page - 1), { disabled: state.page === 1 });
-
-  const pages = new Set([1, totalPages, state.page, state.page - 1, state.page + 1]);
-  let prev = 0;
-  [...pages].filter(p => p >= 1 && p <= totalPages).sort((a,b)=>a-b).forEach(p => {
-    if (prev && p - prev > 1) addGap();
-    addBtn(String(p), p, { active: p === state.page });
-    prev = p;
-  });
-
-  addBtn("›", Math.min(totalPages, state.page + 1), { disabled: state.page === totalPages });
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = String(str);
-  return div.innerHTML;
-}
-
-document.getElementById("search").addEventListener("input", e => {
-  state.query = e.target.value;
-  state.page = 1;
-  render();
-});
-document.getElementById("sort").addEventListener("change", e => {
-  state.sort = e.target.value;
-  render();
-});
-document.getElementById("clearBtn").addEventListener("click", () => {
-  state.query = ""; state.tier = null; state.aiOnly = false; state.integration = null;
-  state.sort = "relevance"; state.page = 1;
-  document.getElementById("search").value = "";
-  document.getElementById("sort").value = "relevance";
-  render();
-});
-</script>
-
-</body>
-</html>
+  const addBtn = (
