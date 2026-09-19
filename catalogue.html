@@ -497,8 +497,17 @@
 
 <script>
 /* ---------------------------------------------------------------
-   Catalogue + Paddle checkout
---------------------------------------------------------------- */
+   Catalogue + Paddle checkout (version corrigée)
+   --------------------------------------------------------------- */
+
+/* ============================================================
+   1. PRIX PADDLE PAR TIER (⚠️ VOS VRAIS PRICE IDS)
+   ============================================================ */
+const PADDLE_PRICE_BY_TIER = {
+  "Basic":    "pri_01m2rge8fxm9eata772a7h2fgy",   //  9 $
+  "Standard": "pri_01m2sz15hh0pnszj01xrbfnqvq",   // 25 $
+  "Premium":  "pri_01m2rh9xexq9m5jqgjayxrte9d"    // 59 $
+};
 
 let CATALOG = [];
 
@@ -511,16 +520,6 @@ const state = {
   page: 1,
   perPage: 30,
   showAllIntegrations: false,
-};
-
-const PRICE_IDS = {
-  "AI Agents & Chatbots":       "pri_01m1t13wzc2mr996x8hvz28na0",
-  "Google Workspace":           "pri_01m1t1bayzghvn4s620a4haxdn",
-  "Scheduled & Cron Jobs":      "pri_01m1t1ha40yxakg9pvn1wxyp9b",
-  "Webhook & API Integrations": "pri_01m1t1pt2vx6fme3p9a9v5yxnn",
-  "Social Media Automation":    "pri_01m1t1swx84q5ghegwd72grpex",
-  "Telegram Automation":        "pri_01m1t1x17cevjx82ysphfet716",
-  "CRM & Sales":                "pri_01m1t21d42wta2dja4nmdea277"
 };
 
 const NODE_LABELS = {
@@ -622,6 +621,9 @@ function prettifyNodeName(raw) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/* ============================================================
+   2. CHARGEMENT DU CATALOGUE
+   ============================================================ */
 fetch('catalog_data.json')
   .then(r => r.json())
   .then(data => {
@@ -636,6 +638,9 @@ fetch('catalog_data.json')
     empty.innerHTML = 'Impossible de charger le catalogue.<span class="mono">Vérifie que catalog_data.json est bien dans le même dossier que cette page.</span>';
   });
 
+/* ============================================================
+   3. FILTRES
+   ============================================================ */
 function initFilters(){
   renderChipGroup("tierFilters", ["Basic", "Standard", "Premium"], val => {
     state.tier = state.tier === val ? null : val;
@@ -723,6 +728,9 @@ function syncChipStates(){
   document.querySelectorAll("#aiFilters .chip").forEach(c => c.classList.toggle("active", state.aiOnly));
 }
 
+/* ============================================================
+   4. FILTRAGE
+   ============================================================ */
 function getFiltered(){
   const q = state.query.trim().toLowerCase();
   let items = CATALOG.filter(item => {
@@ -743,26 +751,9 @@ function getFiltered(){
   return items;
 }
 
-function getPriceIdForCard(card) {
-  const title = card.querySelector('h3').textContent.trim();
-  if (PRICE_IDS[title]) return PRICE_IDS[title];
-
-  if (/AI Agents|Chatbots/i.test(title))            return PRICE_IDS["AI Agents & Chatbots"];
-  if (/Google Workspace|Sheets|Drive|Calendar|Gmail/i.test(title)) return PRICE_IDS["Google Workspace"];
-  if (/Scheduled|Cron/i.test(title))                return PRICE_IDS["Scheduled & Cron Jobs"];
-  if (/Webhook|API/i.test(title))                   return PRICE_IDS["Webhook & API Integrations"];
-  if (/Social Media|Twitter|Discord|Slack/i.test(title)) return PRICE_IDS["Social Media Automation"];
-  if (/Telegram/i.test(title))                      return PRICE_IDS["Telegram Automation"];
-  if (/CRM|HubSpot|Salesforce|Pipedrive/i.test(title)) return PRICE_IDS["CRM & Sales"];
-
-  const tier = card.querySelector('.tier').textContent.toUpperCase();
-  if (tier.includes("BASIC"))    return PRICE_IDS["AI Agents & Chatbots"];
-  if (tier.includes("STANDARD")) return PRICE_IDS["Google Workspace"];
-  if (tier.includes("PREMIUM"))  return PRICE_IDS["Social Media Automation"];
-
-  return PRICE_IDS["AI Agents & Chatbots"];
-}
-
+/* ============================================================
+   5. RENDU
+   ============================================================ */
 function render(){
   syncChipStates();
   const filtered = getFiltered();
@@ -798,13 +789,22 @@ function render(){
     grid.appendChild(card);
   });
 
-  grid.querySelectorAll('.buy-btn').forEach(el => {
+  /* ============================================================
+     BOUTON ACHETER → PADDLE CHECKOUT
+     ============================================================ */
+  grid.querySelectorAll('.buy-btn').forEach((el, idx) => {
     el.addEventListener('click', () => {
-      const card = el.closest('.card');
-      const priceId = getPriceIdForCard(card);
+      const item = pageItems[idx];
+      const priceId = PADDLE_PRICE_BY_TIER[item.t] || PADDLE_PRICE_BY_TIER["Basic"];
 
       Paddle.Checkout.open({
         items: [{ priceId: priceId, quantity: 1 }],
+        customData: {
+          workflow_file: item.f,
+          workflow_name: item.n,
+          tier: item.t,
+          price_usd: item.p
+        },
         settings: {
           displayMode: "overlay",
           theme: "light",
@@ -856,6 +856,9 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+/* ============================================================
+   6. EVENTS
+   ============================================================ */
 document.getElementById("search").addEventListener("input", e => {
   state.query = e.target.value;
   state.page = 1;
